@@ -7,80 +7,109 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;700;900&display=swap');
-        body { background-color: #0f172a; font-family: 'Inter', sans-serif; overflow: hidden; touch-action: none; }
-        .target { transition: transform 0.1s ease; cursor: pointer; position: absolute; }
+        
+        /* Updated background to a very light pastel baby blue */
+        body { 
+            background-color: #f0f9ff; 
+            font-family: 'Inter', sans-serif; 
+            overflow: hidden; 
+            touch-action: none; 
+        }
+
+        .target { transition: transform 0.1s ease; cursor: pointer; position: absolute; z-index: 10; }
         .target:active { transform: scale(0.9); }
-        .stats-panel { backdrop-filter: blur(10px); background: rgba(30, 41, 59, 0.7); border: 1px solid rgba(255,255,255,0.1); }
-        .phase-indicator { transition: all 0.5s ease; }
+        
+        /* Glassmorphism for the panel against the pastel blue */
+        .stats-panel { 
+            backdrop-filter: blur(10px); 
+            background: rgba(255, 255, 255, 0.85); 
+            border: 1px solid rgba(186, 230, 253, 0.5); 
+            box-shadow: 0 10px 25px rgba(0,0,0,0.03); 
+        }
+        
+        /* Blast Particle Animation */
+        .particle {
+            position: absolute;
+            pointer-events: none;
+            background-color: #ef4444; /* High-response Red particles */
+            border-radius: 50%;
+            z-index: 5;
+            animation: explode 0.6s ease-out forwards;
+        }
+
+        @keyframes explode {
+            0% { transform: translate(0, 0) scale(1); opacity: 1; }
+            100% { transform: translate(var(--tx), var(--ty)) scale(0); opacity: 0; }
+        }
     </style>
 </head>
-<body class="h-screen w-screen flex flex-col items-center justify-center text-white">
+<body class="h-screen w-screen flex flex-col items-center justify-center text-slate-900">
 
     <!-- UI Overlay -->
     <div class="fixed top-8 left-8 right-8 flex justify-between items-start pointer-events-none z-50">
         <div>
-            <h1 class="text-3xl font-black tracking-tighter text-emerald-400">Motor Processor Lab</h1>
-            <div id="phaseTag" class="inline-block px-3 py-1 bg-emerald-500/20 border border-emerald-500/30 rounded-full mt-1">
-                <p class="text-[10px] uppercase font-bold tracking-widest text-emerald-400">Phase 1: Big Targets</p>
+            <h1 class="text-3xl font-black tracking-tighter text-indigo-600">Motor Processor Lab</h1>
+            <div id="phaseTag" class="inline-block px-3 py-1 bg-indigo-100 border border-indigo-200 rounded-full mt-1">
+                <p class="text-[10px] uppercase font-bold tracking-widest text-indigo-600">Phase 1: Big Targets</p>
             </div>
         </div>
         
         <div class="stats-panel p-6 rounded-3xl flex gap-8 pointer-events-auto">
             <div class="text-center">
-                <p class="text-[10px] font-bold text-slate-500 uppercase mb-1">MT (ms)</p>
-                <p id="lastTime" class="text-2xl font-black text-white">0</p>
+                <p class="text-[10px] font-bold text-slate-400 uppercase mb-1">MT (ms)</p>
+                <p id="lastTime" class="text-2xl font-black text-slate-800">0</p>
             </div>
-            <div class="text-center border-l border-slate-700 pl-8">
-                <p class="text-[10px] font-bold text-slate-500 uppercase mb-1">Phase Avg</p>
-                <p id="avgTime" class="text-2xl font-black text-emerald-400">0</p>
+            <div class="text-center border-l border-sky-100 pl-8">
+                <p class="text-[10px] font-bold text-slate-400 uppercase mb-1">Phase Avg</p>
+                <p id="avgTime" class="text-2xl font-black text-indigo-600">0</p>
             </div>
-            <div class="text-center border-l border-slate-700 pl-8">
-                <p class="text-[10px] font-bold text-slate-500 uppercase mb-1">Progress</p>
-                <p id="hitCount" class="text-2xl font-black text-blue-400">0/5</p>
+            <div class="text-center border-l border-sky-100 pl-8">
+                <p class="text-[10px] font-bold text-slate-400 uppercase mb-1">Progress</p>
+                <p id="hitCount" class="text-2xl font-black text-blue-500">0/5</p>
             </div>
         </div>
     </div>
 
     <!-- Start Screen -->
-    <div id="startScreen" class="text-center max-w-md z-40 bg-slate-800/80 p-10 rounded-[3rem] border border-slate-700 backdrop-blur-xl">
-        <div class="w-20 h-20 bg-indigo-500/20 text-indigo-400 rounded-full flex items-center justify-center mx-auto mb-6">
-            <svg class="w-10 h-10" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"/></svg>
+    <div id="startScreen" class="text-center max-w-md z-40 bg-white p-12 rounded-[3rem] border border-sky-100 shadow-xl shadow-sky-900/5">
+        <div class="w-20 h-20 bg-indigo-100 text-indigo-600 rounded-full flex items-center justify-center mx-auto mb-6">
+            <svg class="w-10 h-10" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M13 10V3L4 14h7v7l9-11h-7z"/></svg>
         </div>
-        <h2 class="text-2xl font-black mb-4">Fitts's Law Comparison</h2>
-        <p class="text-slate-400 text-sm mb-8 leading-relaxed">This experiment has two phases: <br> 1. <strong>Big Targets</strong> (Baseline) <br> 2. <strong>Small Targets</strong> (Precision Test) <br><br> We will compare your performance speed between the two.</p>
-        <button onclick="startExperiment()" class="w-full bg-emerald-600 hover:bg-emerald-500 py-4 rounded-2xl font-black tracking-widest transition shadow-lg shadow-emerald-900/20">BEGIN PHASE 1</button>
+        <h2 class="text-2xl font-black mb-4 text-slate-800">Fitts's Law Experiment</h2>
+        <p class="text-slate-500 text-sm mb-8 leading-relaxed">Measuring motor cycles with high-response feedback. <br><br> 1. <strong>Big Targets</strong> (Baseline) <br> 2. <strong>Small Targets</strong> (Precision Test)</p>
+        <button onclick="startExperiment()" class="w-full bg-indigo-600 hover:bg-indigo-700 py-4 rounded-2xl font-black tracking-widest transition text-white shadow-xl shadow-indigo-100">BEGIN EXPERIMENT</button>
     </div>
 
     <!-- The Target Canvas -->
     <div id="gameArea" class="absolute inset-0 hidden">
-        <div id="target" class="target rounded-full bg-emerald-500 shadow-[0_0_30px_rgba(16,185,129,0.4)] border-4 border-white/20 flex items-center justify-center text-white font-black text-xs" onclick="hitTarget(event)">
-            TAP
+        <div id="target" class="target rounded-full bg-emerald-500 shadow-xl border-4 border-white flex items-center justify-center text-white font-black text-xs uppercase" onclick="hitTarget(event)">
+            Hit
         </div>
     </div>
 
     <!-- Results Modal -->
-    <div id="resultsModal" class="fixed inset-0 bg-slate-900/95 backdrop-blur-2xl hidden z-50 flex items-center justify-center p-6">
-        <div class="bg-slate-800 border border-slate-700 p-10 rounded-[3rem] max-w-lg w-full text-center">
-            <h3 class="text-3xl font-black text-white mb-6">Comparison Report</h3>
+    <div id="resultsModal" class="fixed inset-0 bg-sky-50/90 backdrop-blur-xl hidden z-50 flex items-center justify-center p-6">
+        <div class="bg-white border border-sky-100 p-12 rounded-[4rem] shadow-2xl max-w-lg w-full text-center">
+            <h3 class="text-3xl font-black text-slate-900 mb-8">Performance Comparison</h3>
             
-            <div class="grid grid-cols-2 gap-4 mb-8">
-                <div class="bg-slate-900/50 p-6 rounded-3xl border border-slate-700">
-                    <p class="text-[10px] font-bold text-slate-500 uppercase mb-2">Phase 1: Big</p>
-                    <p id="bigAvgDisplay" class="text-3xl font-black text-white">0ms</p>
+            <div class="grid grid-cols-2 gap-6 mb-10">
+                <div class="bg-slate-50 p-6 rounded-3xl border border-slate-100">
+                    <p class="text-[10px] font-bold text-slate-400 uppercase mb-2">Phase 1: Big</p>
+                    <p id="bigAvgDisplay" class="text-3xl font-black text-slate-800">0ms</p>
                 </div>
-                <div class="bg-slate-900/50 p-6 rounded-3xl border border-slate-700">
-                    <p class="text-[10px] font-bold text-slate-500 uppercase mb-2">Phase 2: Small</p>
-                    <p id="smallAvgDisplay" class="text-3xl font-black text-emerald-400">0ms</p>
+                <div class="bg-slate-50 p-6 rounded-3xl border border-slate-100">
+                    <p class="text-[10px] font-bold text-slate-400 uppercase mb-2">Phase 2: Small</p>
+                    <p id="smallAvgDisplay" class="text-3xl font-black text-indigo-600">0ms</p>
                 </div>
             </div>
 
-            <div class="bg-indigo-500/10 p-6 rounded-3xl border border-indigo-500/20 mb-10">
-                <p class="text-xs font-bold text-indigo-400 uppercase mb-2">Target Size Penalty</p>
-                <p id="penaltyDisplay" class="text-5xl font-black text-white">+0%</p>
-                <p class="text-[10px] text-slate-500 mt-2">Small targets increased your motor cycle time by this much.</p>
+            <div class="bg-red-50 p-8 rounded-3xl border border-red-100 mb-10">
+                <p class="text-xs font-bold text-red-400 uppercase mb-2">Target Size Penalty</p>
+                <p id="penaltyDisplay" class="text-6xl font-black text-red-600">+0%</p>
+                <p class="text-[10px] text-slate-400 mt-4 italic font-medium uppercase tracking-widest">Motor Cycle Delay Under Precision Pressure</p>
             </div>
 
-            <button onclick="location.reload()" class="w-full bg-slate-700 text-white py-4 rounded-2xl font-bold hover:bg-slate-600 transition">RUN TEST AGAIN</button>
+            <button onclick="location.reload()" class="w-full bg-slate-900 text-white py-4 rounded-2xl font-bold hover:bg-black transition">RESTART LAB</button>
         </div>
     </div>
 
@@ -104,12 +133,35 @@
             spawnTarget();
         }
 
+        function createBlast(x, y) {
+            const particleCount = 12;
+            for (let i = 0; i < particleCount; i++) {
+                const p = document.createElement('div');
+                p.className = 'particle';
+                
+                const size = Math.random() * 8 + 4;
+                p.style.width = size + 'px';
+                p.style.height = size + 'px';
+                
+                p.style.left = x + 'px';
+                p.style.top = y + 'px';
+                
+                const angle = Math.random() * Math.PI * 2;
+                const dist = Math.random() * 100 + 50;
+                const tx = Math.cos(angle) * dist;
+                const ty = Math.sin(angle) * dist;
+                
+                p.style.setProperty('--tx', tx + 'px');
+                p.style.setProperty('--ty', ty + 'px');
+                
+                document.body.appendChild(p);
+                setTimeout(() => p.remove(), 600);
+            }
+        }
+
         function spawnTarget() {
-            // Determine size based on phase
-            // Phase 1 (Big) = 120px, Phase 2 (Small) = 40px
-            const size = currentPhase === 0 ? 120 : 40;
+            const size = currentPhase === 0 ? 120 : 45;
             
-            // Randomize position (Distance D)
             const padding = 150;
             const x = Math.random() * (window.innerWidth - size - padding * 2) + padding;
             const y = Math.random() * (window.innerHeight - size - padding * 2) + padding;
@@ -119,10 +171,8 @@
             target.style.left = x + 'px';
             target.style.top = y + 'px';
 
-            // Change color for visual feedback in Phase 2
             if (currentPhase === 1) {
-                target.classList.replace('bg-emerald-500', 'bg-indigo-500');
-                target.classList.replace('shadow-[0_0_30px_rgba(16,185,129,0.4)]', 'shadow-[0_0_30px_rgba(99,102,241,0.4)]');
+                target.classList.replace('bg-emerald-500', 'bg-blue-600');
             }
             
             startTime = performance.now();
@@ -132,10 +182,11 @@
             const endTime = performance.now();
             const elapsed = Math.round(endTime - startTime);
             
+            createBlast(e.clientX, e.clientY);
+
             hits++;
             phaseTime += elapsed;
             
-            // Update UI
             document.getElementById('lastTime').innerText = elapsed;
             document.getElementById('hitCount').innerText = `${hits}/${trialsPerPhase}`;
             document.getElementById('avgTime').innerText = Math.round(phaseTime / hits);
@@ -149,30 +200,24 @@
 
         function handlePhaseTransition() {
             if (currentPhase === 0) {
-                // Record Big Average
                 bigAvg = Math.round(phaseTime / trialsPerPhase);
-                
-                // Transition to Small Phase
                 currentPhase = 1;
                 hits = 0;
                 phaseTime = 0;
                 
-                // Update UI Labels
-                phaseTag.innerHTML = `<p class="text-[10px] uppercase font-bold tracking-widest text-indigo-400">Phase 2: Small Targets</p>`;
-                phaseTag.classList.replace('bg-emerald-500/20', 'bg-indigo-500/20');
-                phaseTag.classList.replace('border-emerald-500/30', 'border-indigo-500/30');
+                phaseTag.innerHTML = `<p class="text-[10px] uppercase font-bold tracking-widest text-blue-600">Phase 2: Small Targets</p>`;
+                phaseTag.classList.replace('bg-indigo-100', 'bg-blue-100');
+                phaseTag.classList.replace('border-indigo-200', 'border-blue-200');
                 
                 document.getElementById('hitCount').innerText = `0/${trialsPerPhase}`;
                 document.getElementById('avgTime').innerText = `0`;
                 
-                // Pause slightly for the user to perceive the state change
                 target.style.display = 'none';
                 setTimeout(() => {
                     target.style.display = 'flex';
                     spawnTarget();
-                }, 500);
+                }, 600);
             } else {
-                // Record Small Average
                 smallAvg = Math.round(phaseTime / trialsPerPhase);
                 finishExperiment();
             }
@@ -183,7 +228,6 @@
             document.getElementById('bigAvgDisplay').innerText = bigAvg + "ms";
             document.getElementById('smallAvgDisplay').innerText = smallAvg + "ms";
             
-            // Calculate Performance Penalty
             const penalty = Math.round(((smallAvg - bigAvg) / bigAvg) * 100);
             document.getElementById('penaltyDisplay').innerText = `+${penalty}%`;
         }
