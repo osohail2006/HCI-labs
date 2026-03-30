@@ -1,1 +1,185 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Safe Syringe Interface - HCI Lab</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@700&family=Inter:wght@400;600;800&display=swap');
+        body { background-color: #f8fafc; font-family: 'Inter', sans-serif; }
+        .digit-display { font-family: 'JetBrains+Mono', monospace; }
+        .control-btn { transition: all 0.1s ease; }
+        .control-btn:active { transform: scale(0.9); background-color: #e2e8f0; }
+        .glass-panel { background: rgba(255, 255, 255, 0.8); backdrop-filter: blur(8px); border: 1px solid rgba(255, 255, 255, 0.3); }
+    </style>
+</head>
+<body class="p-4 flex justify-center items-center min-h-screen">
 
+    <div class="max-w-xl w-full bg-white rounded-3xl shadow-2xl border border-slate-200 overflow-hidden">
+        <!-- Header: HCI Context -->
+        <div class="bg-indigo-900 p-6 text-white text-center">
+            <h1 class="text-xl font-extrabold tracking-tight uppercase">Safety-First Syringe Interface</h1>
+            <p class="text-indigo-300 text-xs mt-1">HCI Principle: Error Prevention (Individual Digit Control) - Fig 0.1</p>
+        </div>
+
+        <div class="p-8 space-y-10">
+            
+            <!-- 1. PATIENT WEIGHT (With Plus/Minus Controls) -->
+            <section class="bg-slate-50 p-6 rounded-2xl border border-slate-100">
+                <div class="flex justify-between items-center">
+                    <div>
+                        <label class="block text-xs font-bold text-slate-400 uppercase tracking-widest mb-1">Patient Weight</label>
+                        <div class="flex items-center gap-4">
+                            <button onclick="adjustWeight(-1)" class="control-btn w-10 h-10 rounded-full bg-white border border-slate-200 flex items-center justify-center text-slate-600 shadow-sm font-bold text-xl hover:bg-slate-100">−</button>
+                            <span id="weightDisplay" class="text-4xl font-black text-indigo-600">70</span>
+                            <button onclick="adjustWeight(1)" class="control-btn w-10 h-10 rounded-full bg-white border border-slate-200 flex items-center justify-center text-slate-600 shadow-sm font-bold text-xl hover:bg-slate-100">+</button>
+                        </div>
+                    </div>
+                    <div class="text-right">
+                        <span class="text-slate-300 font-bold text-2xl">kg</span>
+                    </div>
+                </div>
+            </section>
+
+            <!-- 2. SAFE DOSE INPUT (Individual Digit Controls with +/-) -->
+            <section>
+                <div class="text-center mb-6">
+                    <h2 class="text-xs font-bold text-slate-400 uppercase tracking-widest">Set Dosage (mg/kg)</h2>
+                    <p class="text-[10px] text-red-400 mt-1 italic uppercase tracking-tighter">Prevents accidental factor-of-10 errors</p>
+                </div>
+
+                <div class="flex justify-center items-center gap-3">
+                    <!-- Tens Digit -->
+                    <div class="flex flex-col items-center">
+                        <button onclick="changeDigit('d1', 1)" class="control-btn p-2 rounded-t-lg bg-slate-100 hover:bg-slate-200 text-slate-600 font-bold text-lg">+</button>
+                        <div id="d1" class="digit-display text-4xl font-black bg-slate-900 text-white w-14 h-16 flex items-center justify-center border-y border-slate-700">0</div>
+                        <button onclick="changeDigit('d1', -1)" class="control-btn p-2 rounded-b-lg bg-slate-100 hover:bg-slate-200 text-slate-600 font-bold text-lg">−</button>
+                    </div>
+
+                    <!-- Ones Digit -->
+                    <div class="flex flex-col items-center">
+                        <button onclick="changeDigit('d2', 1)" class="control-btn p-2 rounded-t-lg bg-slate-100 hover:bg-slate-200 text-slate-600 font-bold text-lg">+</button>
+                        <div id="d2" class="digit-display text-4xl font-black bg-slate-900 text-white w-14 h-16 flex items-center justify-center border-y border-slate-700">1</div>
+                        <button onclick="changeDigit('d2', -1)" class="control-btn p-2 rounded-b-lg bg-slate-100 hover:bg-slate-200 text-slate-600 font-bold text-lg">−</button>
+                    </div>
+
+                    <div class="text-4xl font-bold text-slate-400 mt-4">.</div>
+
+                    <!-- Tenths Digit -->
+                    <div class="flex flex-col items-center">
+                        <button onclick="changeDigit('d3', 1)" class="control-btn p-2 rounded-t-lg bg-slate-100 hover:bg-slate-200 text-slate-600 font-bold text-lg">+</button>
+                        <div id="d3" class="digit-display text-4xl font-black bg-slate-900 text-white w-14 h-16 flex items-center justify-center border-y border-slate-700">3</div>
+                        <button onclick="changeDigit('d3', -1)" class="control-btn p-2 rounded-b-lg bg-slate-100 hover:bg-slate-200 text-slate-600 font-bold text-lg">−</button>
+                    </div>
+
+                    <!-- Hundredths Digit -->
+                    <div class="flex flex-col items-center">
+                        <button onclick="changeDigit('d4', 1)" class="control-btn p-2 rounded-t-lg bg-slate-100 hover:bg-slate-200 text-slate-600 font-bold text-lg">+</button>
+                        <div id="d4" class="digit-display text-4xl font-black bg-slate-900 text-white w-14 h-16 flex items-center justify-center border-y border-slate-700">7</div>
+                        <button onclick="changeDigit('d4', -1)" class="control-btn p-2 rounded-b-lg bg-slate-100 hover:bg-slate-200 text-slate-600 font-bold text-lg">−</button>
+                    </div>
+                </div>
+            </section>
+
+            <!-- 3. CALCULATION RESULTS -->
+            <section class="bg-indigo-50 rounded-2xl p-6 border-2 border-indigo-100 text-center relative overflow-hidden">
+                <div class="relative z-10">
+                    <span class="text-[10px] font-bold text-indigo-400 uppercase tracking-tighter">Target Concentration: 100 mg/mL</span>
+                    <div id="totalDose" class="text-5xl font-black text-indigo-900 my-2">0.00 <small class="text-xl">mL</small></div>
+                    <p class="text-xs text-indigo-500 font-medium">Total Volume to be Administered</p>
+                </div>
+                <div class="absolute bottom-0 left-0 h-1 bg-indigo-500 transition-all duration-500" id="progressBar" style="width: 0%"></div>
+            </section>
+
+            <button onclick="showConfirmation()" class="w-full bg-slate-900 text-white py-5 rounded-2xl font-bold hover:bg-indigo-700 transition shadow-lg flex items-center justify-center gap-3">
+                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+                CONFIRM INJECTION
+            </button>
+        </div>
+
+        <!-- Footer -->
+        <div class="bg-slate-50 px-8 py-4 border-t text-[10px] text-slate-400 flex justify-between">
+            <span>REFERENCE: DIX FIG 0.1 (CH 1)</span>
+            <span>SYSTEM STATE: STABLE</span>
+        </div>
+    </div>
+
+    <!-- Confirmation Modal -->
+    <div id="modal" class="fixed inset-0 bg-black/60 backdrop-blur-sm hidden flex items-center justify-center p-4 z-50">
+        <div class="bg-white rounded-3xl p-8 max-w-sm w-full text-center shadow-2xl">
+            <div class="w-20 h-20 bg-green-100 text-green-600 rounded-full flex items-center justify-center mx-auto mb-6">
+                <svg class="w-10 h-10" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7"/></svg>
+            </div>
+            <h3 class="text-xl font-black text-slate-900 mb-2">Confirm Injection?</h3>
+            <p id="confirmText" class="text-slate-500 text-sm mb-8"></p>
+            <div class="flex gap-4">
+                <button onclick="closeModal()" class="flex-1 py-3 font-bold text-slate-400 hover:text-slate-600 transition">CANCEL</button>
+                <button onclick="finish()" class="flex-1 bg-green-600 text-white py-3 rounded-xl font-bold hover:bg-green-700 transition">EXECUTE</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let currentWeight = 70;
+
+        function adjustWeight(val) {
+            currentWeight = Math.max(0, currentWeight + val);
+            document.getElementById('weightDisplay').innerText = currentWeight;
+            calculate();
+        }
+
+        function changeDigit(id, val) {
+            let el = document.getElementById(id);
+            let current = parseInt(el.innerText);
+            let next = (current + val + 10) % 10;
+            el.innerText = next;
+            calculate();
+        }
+
+        function calculate() {
+            const weight = currentWeight;
+            const d1 = parseInt(document.getElementById('d1').innerText);
+            const d2 = parseInt(document.getElementById('d2').innerText);
+            const d3 = parseInt(document.getElementById('d3').innerText);
+            const d4 = parseInt(document.getElementById('d4').innerText);
+
+            const dosePerKg = (d1 * 10) + d2 + (d3 * 0.1) + (d4 * 0.01);
+            const concentration = 100; // mg/mL
+            
+            const totalMg = weight * dosePerKg;
+            const totalMl = totalMg / concentration;
+
+            document.getElementById('totalDose').innerHTML = `${totalMl.toFixed(2)} <small class="text-xl">mL</small>`;
+            
+            const bar = document.getElementById('progressBar');
+            const percent = Math.min((totalMl / 10) * 100, 100);
+            bar.style.width = percent + '%';
+            if(percent > 80) bar.style.backgroundColor = '#ef4444';
+            else bar.style.backgroundColor = '#6366f1';
+        }
+
+        function showConfirmation() {
+            const d1 = document.getElementById('d1').innerText;
+            const d2 = document.getElementById('d2').innerText;
+            const d3 = document.getElementById('d3').innerText;
+            const d4 = document.getElementById('d4').innerText;
+            const ml = document.getElementById('totalDose').innerText.split(' ')[0];
+
+            document.getElementById('confirmText').innerText = `You are about to inject ${ml}mL (Dose: ${d1}${d2}.${d3}${d4} mg/kg for a ${currentWeight}kg patient).`;
+            document.getElementById('modal').classList.remove('hidden');
+        }
+
+        function closeModal() {
+            document.getElementById('modal').classList.add('hidden');
+        }
+
+        function finish() {
+            alert("Injection Sequence Initialized.");
+            closeModal();
+        }
+
+        window.onload = calculate;
+    </script>
+</body>
+</html>
