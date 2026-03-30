@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>WhoPaid? - Social Coordination System</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap');
+        body { font-family: 'Inter', sans-serif; background-color: #f8fafc; }
+        .avatar-ring { transition: all 0.2s ease; }
+        .avatar-active { ring: 4px solid #10b981; transform: scale(1.05); }
+        .fade-in { animation: fadeIn 0.3s ease-out; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+        .check-anim { animation: checkPop 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275); }
+        @keyframes checkPop { 0% { transform: scale(0); } 100% { transform: scale(1); } }
+    </style>
+</head>
+<body class="min-h-screen flex justify-center items-start p-4 md:p-8">
+
+    <div class="max-w-md w-full bg-white rounded-[2.5rem] shadow-2xl border border-slate-100 overflow-hidden flex flex-col h-[850px] relative">
+        
+        <!-- Header: Visibility of System Status -->
+        <header class="bg-slate-900 p-8 text-white">
+            <div class="flex justify-between items-center mb-6">
+                <h1 class="text-2xl font-black tracking-tight">WhoPaid?</h1>
+                <div class="bg-emerald-500/20 text-emerald-400 px-3 py-1 rounded-full text-[10px] font-bold uppercase tracking-widest">System: Online</div>
+            </div>
+            <div class="flex gap-4">
+                <div class="flex-1 bg-white/5 p-4 rounded-2xl border border-white/10">
+                    <p class="text-[10px] text-slate-400 uppercase font-bold mb-1">You are owed</p>
+                    <p class="text-xl font-black text-emerald-400">Rs. <span id="totalOwed">0</span></p>
+                </div>
+                <div class="flex-1 bg-white/5 p-4 rounded-2xl border border-white/10">
+                    <p class="text-[10px] text-slate-400 uppercase font-bold mb-1">You owe</p>
+                    <p class="text-xl font-black text-rose-400">Rs. <span id="totalOwe">0</span></p>
+                </div>
+            </div>
+        </header>
+
+        <!-- Main Content: External Cognition (Balances) -->
+        <main class="flex-1 p-6 overflow-y-auto space-y-4">
+            <h2 class="text-xs font-bold text-slate-400 uppercase tracking-widest px-2">Group Activity</h2>
+            <div id="friendsList" class="space-y-3">
+                <!-- Friend cards injected here -->
+            </div>
+        </main>
+
+        <!-- Floating Action Button: Fitts's Law (Easy reach) -->
+        <button onclick="openModal()" class="absolute bottom-8 right-8 w-16 h-16 bg-emerald-600 text-white rounded-2xl shadow-xl shadow-emerald-200 hover:bg-emerald-700 transition-all active:scale-90 flex items-center justify-center z-10">
+            <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M12 6v6m0 0v6m0-6h6m-6 0H6"/></svg>
+        </button>
+
+        <!-- FOOTER: HCI Reference -->
+        <footer class="p-6 text-center text-[10px] text-slate-300 font-bold uppercase tracking-tighter border-t">
+            Norman's Action Cycle • Miller's Law • Gulf of Evaluation
+        </footer>
+
+        <!-- MODAL: Chunked Input Form (Reducing Cognitive Load) -->
+        <div id="modal" class="fixed inset-0 bg-slate-900/60 backdrop-blur-md hidden z-50 flex items-end md:items-center justify-center p-0 md:p-4">
+            <div class="bg-white w-full max-w-md rounded-t-[2.5rem] md:rounded-[2.5rem] p-8 space-y-8 fade-in">
+                
+                <div class="flex justify-between items-center">
+                    <h3 class="text-xl font-extrabold text-slate-800">Add Expense</h3>
+                    <button onclick="closeModal()" class="text-slate-400 hover:text-slate-600"><svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M6 18L18 6M6 6l12 12" stroke-width="2" stroke-linecap="round"/></svg></button>
+                </div>
+
+                <!-- Step 1: Who Paid? (Recognition over Recall) -->
+                <section>
+                    <p class="text-[10px] font-bold text-slate-400 uppercase mb-4">Who Paid the bill?</p>
+                    <div class="flex gap-4 overflow-x-auto pb-2 no-scrollbar" id="payerSelection">
+                        <!-- Payer options injected here -->
+                    </div>
+                </section>
+
+                <!-- Step 2: What & How Much? -->
+                <section class="space-y-4">
+                    <div class="bg-slate-50 p-4 rounded-2xl border border-slate-100 flex items-center gap-3">
+                        <div class="w-10 h-10 bg-white rounded-xl shadow-sm flex items-center justify-center text-slate-400">
+                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M7 7h10M7 12h10m-10 5h10" stroke-width="2" stroke-linecap="round"/></svg>
+                        </div>
+                        <input type="text" id="description" placeholder="Lunch, Dinner, Trip..." class="flex-1 bg-transparent font-bold text-slate-800 focus:outline-none">
+                    </div>
+
+                    <div class="bg-slate-50 p-4 rounded-2xl border border-slate-100 flex items-center gap-3">
+                        <div class="w-10 h-10 bg-white rounded-xl shadow-sm flex items-center justify-center text-emerald-600 font-bold">Rs.</div>
+                        <input type="number" id="amount" placeholder="0.00" class="flex-1 bg-transparent font-black text-2xl text-slate-800 focus:outline-none" oninput="liveSplit()">
+                    </div>
+                </section>
+
+                <!-- Step 3: Social Split (Fairness dimension) -->
+                <section>
+                    <p class="text-[10px] font-bold text-slate-400 uppercase mb-4">Split with everyone?</p>
+                    <div class="bg-emerald-50 p-4 rounded-2xl flex justify-between items-center">
+                        <span class="text-sm font-bold text-emerald-700">Equally Divided</span>
+                        <span id="splitPreview" class="text-xs font-bold text-emerald-600">Rs. 0 / person</span>
+                    </div>
+                </section>
+
+                <button onclick="saveExpense()" class="w-full bg-slate-900 text-white py-5 rounded-2xl font-black text-sm uppercase tracking-widest hover:bg-emerald-600 transition shadow-xl active:scale-95">
+                    Post to Social History
+                </button>
+            </div>
+        </div>
+
+        <!-- Success Feedback (Bridge Evaluation Gulf) -->
+        <div id="success" class="fixed inset-0 bg-emerald-600 hidden z-[60] flex flex-col items-center justify-center text-white p-8">
+            <div class="w-24 h-24 bg-white/20 rounded-full flex items-center justify-center mb-6 check-anim">
+                <svg class="w-12 h-12" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="4" d="M5 13l4 4L19 7"/></svg>
+            </div>
+            <h2 class="text-3xl font-black mb-2">Expense Added</h2>
+            <p class="text-emerald-100 text-center text-sm font-medium">Participants have been notified. Balances updated across the social network.</p>
+        </div>
+
+    </div>
+
+    <script>
+        const friends = [
+            { id: 0, name: "Me (Omer)", avatar: "https://api.dicebear.com/7.x/avataaars/svg?seed=Felix", balance: 0 },
+            { id: 1, name: "Ali", avatar: "https://api.dicebear.com/7.x/avataaars/svg?seed=Ali", balance: -1250 },
+            { id: 2, name: "Maria", avatar: "https://api.dicebear.com/7.x/avataaars/svg?seed=Maria", balance: 5000 },
+            { id: 3, name: "Sara", avatar: "https://api.dicebear.com/7.x/avataaars/svg?seed=Sara", balance: 0 },
+            { id: 4, name: "Ahmed", avatar: "https://api.dicebear.com/7.x/avataaars/svg?seed=Ahmed", balance: -500 }
+        ];
+
+        let selectedPayerId = 0;
+
+        function renderFriends() {
+            const list = document.getElementById('friendsList');
+            const totalOwedEl = document.getElementById('totalOwed');
+            const totalOweEl = document.getElementById('totalOwe');
+            
+            list.innerHTML = '';
+            let plus = 0, minus = 0;
+
+            friends.forEach(f => {
+                if(f.balance > 0) plus += f.balance;
+                if(f.balance < 0) minus += Math.abs(f.balance);
+
+                const color = f.balance > 0 ? 'text-emerald-500' : (f.balance < 0 ? 'text-rose-500' : 'text-slate-300');
+                const status = f.balance > 0 ? `owes you Rs. ${f.balance}` : (f.balance < 0 ? `you owe Rs. ${Math.abs(f.balance)}` : 'all settled');
+
+                list.innerHTML += `
+                    <div class="flex items-center gap-4 p-4 bg-slate-50/50 rounded-2xl hover:bg-slate-100 transition cursor-pointer">
+                        <img src="${f.avatar}" class="w-12 h-12 rounded-xl bg-white p-1 border">
+                        <div class="flex-1">
+                            <h4 class="text-sm font-bold text-slate-800">${f.name}</h4>
+                            <p class="text-[10px] font-bold ${color} uppercase tracking-tighter">${status}</p>
+                        </div>
+                        ${f.balance !== 0 ? `
+                        <button onclick="settle(${f.id})" class="text-[10px] font-black text-slate-400 hover:text-slate-900 uppercase">Settle</button>
+                        ` : ''}
+                    </div>
+                `;
+            });
+
+            totalOwedEl.innerText = plus;
+            totalOweEl.innerText = minus;
+        }
+
+        function renderPayers() {
+            const container = document.getElementById('payerSelection');
+            container.innerHTML = '';
+            friends.forEach(f => {
+                container.innerHTML += `
+                    <div onclick="selectPayer(${f.id})" class="flex-shrink-0 cursor-pointer text-center">
+                        <img src="${f.avatar}" class="avatar-ring w-14 h-14 rounded-2xl bg-slate-100 p-1 mb-2 ${f.id === selectedPayerId ? 'avatar-active' : ''}">
+                        <p class="text-[10px] font-bold text-slate-500">${f.name.split(' ')[0]}</p>
+                    </div>
+                `;
+            });
+        }
+
+        function selectPayer(id) {
+            selectedPayerId = id;
+            renderPayers();
+        }
+
+        function openModal() {
+            document.getElementById('modal').classList.remove('hidden');
+            renderPayers();
+        }
+
+        function closeModal() {
+            document.getElementById('modal').classList.add('hidden');
+            document.getElementById('amount').value = '';
+            document.getElementById('description').value = '';
+        }
+
+        function liveSplit() {
+            const val = parseFloat(document.getElementById('amount').value) || 0;
+            const split = (val / friends.length).toFixed(0);
+            document.getElementById('splitPreview').innerText = `Rs. ${split} / person`;
+        }
+
+        function settle(id) {
+            const f = friends.find(x => x.id === id);
+            f.balance = 0;
+            renderFriends();
+        }
+
+        function saveExpense() {
+            const amount = parseFloat(document.getElementById('amount').value);
+            if(!amount) return;
+
+            const splitShare = amount / friends.length;
+
+            if (selectedPayerId === 0) { // If I paid
+                friends.forEach(f => {
+                    if (f.id !== 0) f.balance += splitShare;
+                });
+            } else { // If someone else paid
+                friends.forEach(f => {
+                    if (f.id === 0) {
+                        f.balance -= splitShare;
+                    } else if (f.id === selectedPayerId) {
+                        // In a real app, logic for "Others owe others" is handled, 
+                        // here we just track your relationship with them.
+                    }
+                });
+            }
+
+            // Bridge Gulf of Evaluation with Success Animation
+            document.getElementById('success').classList.remove('hidden');
+            setTimeout(() => {
+                document.getElementById('success').classList.add('hidden');
+                closeModal();
+                renderFriends();
+            }, 1800);
+        }
+
+        // Initial Launch
+        renderFriends();
+    </script>
+</body>
+</html>
