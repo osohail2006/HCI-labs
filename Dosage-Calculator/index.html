@@ -10,7 +10,7 @@
         body { background-color: #f8fafc; font-family: 'Inter', sans-serif; }
         .digit-display { font-family: 'JetBrains+Mono', monospace; }
         .control-btn { transition: all 0.1s ease; }
-        .control-btn:active { transform: scale(0.9); background-color: #e2e8f0; }
+        .control-btn:active { transform: scale(0.9); }
         .glass-panel { background: rgba(255, 255, 255, 0.8); backdrop-filter: blur(8px); border: 1px solid rgba(255, 255, 255, 0.3); }
     </style>
 </head>
@@ -31,9 +31,9 @@
                     <div>
                         <label class="block text-xs font-bold text-slate-400 uppercase tracking-widest mb-1">Patient Weight</label>
                         <div class="flex items-center gap-4">
-                            <button onclick="adjustWeight(-1)" class="control-btn w-10 h-10 rounded-full bg-white border border-slate-200 flex items-center justify-center text-slate-600 shadow-sm font-bold text-xl hover:bg-slate-100">−</button>
+                            <button onclick="adjustWeight(-1)" class="control-btn w-10 h-10 rounded-full bg-white border border-red-200 flex items-center justify-center text-red-600 shadow-sm font-bold text-xl hover:bg-red-50">−</button>
                             <span id="weightDisplay" class="text-4xl font-black text-indigo-600">70</span>
-                            <button onclick="adjustWeight(1)" class="control-btn w-10 h-10 rounded-full bg-white border border-slate-200 flex items-center justify-center text-slate-600 shadow-sm font-bold text-xl hover:bg-slate-100">+</button>
+                            <button onclick="adjustWeight(1)" class="control-btn w-10 h-10 rounded-full bg-white border border-green-200 flex items-center justify-center text-green-600 shadow-sm font-bold text-xl hover:bg-green-50">+</button>
                         </div>
                     </div>
                     <div class="text-right">
@@ -52,32 +52,32 @@
                 <div class="flex justify-center items-center gap-3">
                     <!-- Tens Digit -->
                     <div class="flex flex-col items-center">
-                        <button onclick="changeDigit('d1', 1)" class="control-btn p-2 rounded-t-lg bg-slate-100 hover:bg-slate-200 text-slate-600 font-bold text-lg">+</button>
+                        <button onclick="changeDigit('d1', 1)" class="control-btn p-2 rounded-t-lg bg-green-50 hover:bg-green-100 text-green-600 font-bold text-lg">+</button>
                         <div id="d1" class="digit-display text-4xl font-black bg-slate-900 text-white w-14 h-16 flex items-center justify-center border-y border-slate-700">0</div>
-                        <button onclick="changeDigit('d1', -1)" class="control-btn p-2 rounded-b-lg bg-slate-100 hover:bg-slate-200 text-slate-600 font-bold text-lg">−</button>
+                        <button onclick="changeDigit('d1', -1)" class="control-btn p-2 rounded-b-lg bg-red-50 hover:bg-red-100 text-red-600 font-bold text-lg">−</button>
                     </div>
 
                     <!-- Ones Digit -->
                     <div class="flex flex-col items-center">
-                        <button onclick="changeDigit('d2', 1)" class="control-btn p-2 rounded-t-lg bg-slate-100 hover:bg-slate-200 text-slate-600 font-bold text-lg">+</button>
+                        <button onclick="changeDigit('d2', 1)" class="control-btn p-2 rounded-t-lg bg-green-50 hover:bg-green-100 text-green-600 font-bold text-lg">+</button>
                         <div id="d2" class="digit-display text-4xl font-black bg-slate-900 text-white w-14 h-16 flex items-center justify-center border-y border-slate-700">1</div>
-                        <button onclick="changeDigit('d2', -1)" class="control-btn p-2 rounded-b-lg bg-slate-100 hover:bg-slate-200 text-slate-600 font-bold text-lg">−</button>
+                        <button onclick="changeDigit('d2', -1)" class="control-btn p-2 rounded-b-lg bg-red-50 hover:bg-red-100 text-red-600 font-bold text-lg">−</button>
                     </div>
 
                     <div class="text-4xl font-bold text-slate-400 mt-4">.</div>
 
                     <!-- Tenths Digit -->
                     <div class="flex flex-col items-center">
-                        <button onclick="changeDigit('d3', 1)" class="control-btn p-2 rounded-t-lg bg-slate-100 hover:bg-slate-200 text-slate-600 font-bold text-lg">+</button>
+                        <button onclick="changeDigit('d3', 1)" class="control-btn p-2 rounded-t-lg bg-green-50 hover:bg-green-100 text-green-600 font-bold text-lg">+</button>
                         <div id="d3" class="digit-display text-4xl font-black bg-slate-900 text-white w-14 h-16 flex items-center justify-center border-y border-slate-700">3</div>
-                        <button onclick="changeDigit('d3', -1)" class="control-btn p-2 rounded-b-lg bg-slate-100 hover:bg-slate-200 text-slate-600 font-bold text-lg">−</button>
+                        <button onclick="changeDigit('d3', -1)" class="control-btn p-2 rounded-b-lg bg-red-50 hover:bg-red-100 text-red-600 font-bold text-lg">−</button>
                     </div>
 
                     <!-- Hundredths Digit -->
                     <div class="flex flex-col items-center">
-                        <button onclick="changeDigit('d4', 1)" class="control-btn p-2 rounded-t-lg bg-slate-100 hover:bg-slate-200 text-slate-600 font-bold text-lg">+</button>
+                        <button onclick="changeDigit('d4', 1)" class="control-btn p-2 rounded-t-lg bg-green-50 hover:bg-green-100 text-green-600 font-bold text-lg">+</button>
                         <div id="d4" class="digit-display text-4xl font-black bg-slate-900 text-white w-14 h-16 flex items-center justify-center border-y border-slate-700">7</div>
-                        <button onclick="changeDigit('d4', -1)" class="control-btn p-2 rounded-b-lg bg-slate-100 hover:bg-slate-200 text-slate-600 font-bold text-lg">−</button>
+                        <button onclick="changeDigit('d4', -1)" class="control-btn p-2 rounded-b-lg bg-red-50 hover:bg-red-100 text-red-600 font-bold text-lg">−</button>
                     </div>
                 </div>
             </section>
@@ -92,7 +92,7 @@
                 <div class="absolute bottom-0 left-0 h-1 bg-indigo-500 transition-all duration-500" id="progressBar" style="width: 0%"></div>
             </section>
 
-            <button onclick="showConfirmation()" class="w-full bg-slate-900 text-white py-5 rounded-2xl font-bold hover:bg-indigo-700 transition shadow-lg flex items-center justify-center gap-3">
+            <button onclick="showConfirmation()" class="w-full bg-emerald-600 text-white py-5 rounded-2xl font-bold hover:bg-emerald-700 transition shadow-lg flex items-center justify-center gap-3">
                 <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
                 CONFIRM INJECTION
             </button>
