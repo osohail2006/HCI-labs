@@ -3,143 +3,228 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Smart Control Center</title>
+    <title>Smart Control Center - HCI Optimized</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
-        body { background-color: #f1f5f9; font-family: 'Inter', sans-serif; }
-        .control-card { transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); }
-        .bulb-glow { filter: drop-shadow(0 0 15px rgba(253, 224, 71, 0.8)); }
-        .lock-shackle { transition: transform 0.3s ease; transform-origin: right top; }
-        input[type=range] { appearance: none; width: 100%; height: 8px; background: #e2e8f0; border-radius: 5px; outline: none; }
-        input[type=range]::-webkit-slider-thumb { appearance: none; width: 20px; height: 20px; background: #3b82f6; border-radius: 50%; cursor: pointer; border: 2px solid white; box-shadow: 0 2px 4px rgba(0,0,0,0.1); }
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;900&display=swap');
+        
+        body { 
+            background-color: #f8fafc; 
+            font-family: 'Inter', sans-serif; 
+        }
+
+        .control-card { 
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1); 
+            border: 1px solid rgba(0,0,0,0.05);
+        }
+
+        /* Visibility of System Status: Glow effect for evaluation */
+        .bulb-glow { 
+            filter: drop-shadow(0 0 20px rgba(250, 204, 21, 0.6)); 
+        }
+
+        /* Signifiers: Improving rotation for the lock shackle */
+        .lock-shackle { 
+            transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275); 
+            transform-origin: 17px 7px; 
+        }
+
+        /* Constraints & Affordances: Custom range slider */
+        input[type=range] { 
+            appearance: none; 
+            width: 100%; 
+            height: 10px; 
+            background: #e2e8f0; 
+            border-radius: 10px; 
+            outline: none; 
+        }
+        
+        input[type=range]::-webkit-slider-thumb { 
+            appearance: none; 
+            width: 24px; 
+            height: 24px; 
+            background: #3b82f6; 
+            border-radius: 50%; 
+            cursor: pointer; 
+            border: 3px solid white; 
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1); 
+            transition: transform 0.2s ease;
+        }
+
+        input[type=range]::-webkit-slider-thumb:active {
+            transform: scale(1.2);
+        }
+
+        .status-badge {
+            font-size: 10px;
+            letter-spacing: 0.1em;
+            padding: 2px 8px;
+            border-radius: 99px;
+            text-transform: uppercase;
+            font-weight: 800;
+        }
     </style>
 </head>
 <body class="p-6 md:p-12 flex flex-col items-center min-h-screen">
 
-    <div class="max-w-4xl w-full text-center mb-16">
-        <h1 class="text-4xl font-black text-slate-800 tracking-tight">Smart Control Center</h1>
+    <div class="max-w-4xl w-full text-center mb-12">
+        <h1 class="text-4xl font-black text-slate-900 tracking-tight mb-2">Smart Control Center</h1>
+        <p class="text-slate-500 font-medium uppercase text-[10px] tracking-widest">HCI Principles: Mapping • Feedback • Constraints</p>
     </div>
 
-    <div class="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-5xl w-full">
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-6xl w-full">
         
-        <!-- LIGHTING CONTROL -->
-        <div class="bg-white p-8 rounded-3xl shadow-xl control-card flex flex-col items-center">
-            <span class="text-xs font-bold text-slate-400 uppercase mb-6">Zone Lighting</span>
+        <!-- LIGHTING CONTROL (Feedback & Affordance) -->
+        <div class="bg-white p-10 rounded-[2.5rem] shadow-xl control-card flex flex-col items-center border border-slate-100">
+            <span class="status-badge bg-slate-100 text-slate-500 mb-8" id="lightBadge">Inactive</span>
             
-            <svg id="bulbIcon" class="w-24 h-24 mb-8 text-slate-200 transition-all duration-300" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
-                <path d="M9 18h6m-3-15a6 6 0 016 6c0 2.22-1.207 4.156-3 5.19V18H9v-3.81c-1.793-1.034-3-2.97-3-5.19a6 6 0 016-6z" />
-                <path id="bulbFilament" d="M12 9v3m-2-1.5h4" stroke-linecap="round" class="hidden" />
-            </svg>
-
-            <label class="relative inline-flex items-center cursor-pointer">
-                <input type="checkbox" id="lightToggle" class="sr-only peer" onchange="updateLight()">
-                <div class="w-14 h-8 bg-slate-200 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[4px] after:left-[4px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-6 after:w-6 after:transition-all peer-checked:bg-yellow-400"></div>
-            </label>
-            <span id="lightStatus" class="mt-4 text-sm font-bold text-slate-600">Status: Off</span>
-        </div>
-
-        <!-- SECURITY CONTROL -->
-        <div class="bg-white p-8 rounded-3xl shadow-xl control-card flex flex-col items-center">
-            <span class="text-xs font-bold text-slate-400 uppercase mb-6">Secure Access</span>
-            
-            <svg class="w-24 h-24 mb-8 text-slate-700" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                <rect x="5" y="11" width="14" height="10" rx="2" fill="currentColor" fill-opacity="0.1" />
-                <path id="lockShackle" class="lock-shackle" d="M7 11V7a5 5 0 0110 0v4" stroke-linecap="round" />
-            </svg>
-
-            <button id="lockBtn" onclick="toggleLock()" class="px-6 py-3 bg-slate-800 text-white rounded-xl font-bold hover:bg-slate-700 transition active:scale-95">
-                Unlock Room
-            </button>
-            <span id="lockStatus" class="mt-4 text-sm font-bold text-slate-600">Status: Locked</span>
-        </div>
-
-        <!-- CLIMATE CONTROL -->
-        <div class="bg-white p-8 rounded-3xl shadow-xl control-card flex flex-col items-center">
-            <span class="text-xs font-bold text-slate-400 uppercase mb-6">Climate Control</span>
-            
-            <div id="climateIcon" class="w-24 h-24 mb-8 flex items-center justify-center transition-all duration-300">
-                <svg id="iconCold" class="w-16 h-16 text-blue-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                    <path d="M12 3v18m-9-9h18m-3-6l-6 6m6 6l-6-6M6 6l6 6m-6 6l6-6" stroke-linecap="round" stroke-linejoin="round" />
-                </svg>
-                <svg id="iconHot" class="w-16 h-16 text-orange-500 hidden" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                    <path d="M17.657 18.657A8 8 0 016.343 7.343S7 9 9 10c0-2 .5-5 2.986-7C14 5 16.09 5.777 17.656 7.343A7.975 7.975 0 0120 13a7.975 7.975 0 01-2.343 5.657z" stroke-linecap="round" stroke-linejoin="round" />
-                    <path d="M9.879 16.121A3 3 0 1012.015 11L11 14l-1.121 2.121z" stroke-linecap="round" stroke-linejoin="round" />
+            <div id="bulbContainer" class="p-8 bg-slate-50 rounded-full mb-8 transition-colors duration-500">
+                <svg id="bulbIcon" class="w-20 h-20 text-slate-300 transition-all duration-300" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                    <path d="M9 18h6m-3-15a6 6 0 016 6c0 2.22-1.207 4.156-3 5.19V18H9v-3.81c-1.793-1.034-3-2.97-3-5.19a6 6 0 016-6z" />
+                    <path id="bulbFilament" d="M12 9v3m-2-1.5h4" stroke-linecap="round" class="opacity-0 transition-opacity" />
                 </svg>
             </div>
 
-            <div class="w-full px-2">
+            <label class="relative inline-flex items-center cursor-pointer">
+                <input type="checkbox" id="lightToggle" class="sr-only peer" onchange="updateLight()">
+                <div class="w-16 h-9 bg-slate-200 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[4px] after:left-[4px] after:bg-white after:border-slate-300 after:border after:rounded-full after:h-7 after:w-7 after:transition-all peer-checked:bg-yellow-400"></div>
+            </label>
+            <h3 class="mt-6 text-sm font-black text-slate-800 uppercase tracking-tight">Main Gallery</h3>
+        </div>
+
+        <!-- SECURITY CONTROL (Gulf of Evaluation) -->
+        <div class="bg-white p-10 rounded-[2.5rem] shadow-xl control-card flex flex-col items-center border border-slate-100">
+            <span class="status-badge bg-rose-100 text-rose-600 mb-8" id="lockBadge">Secured</span>
+            
+            <div id="lockContainer" class="p-8 bg-slate-50 rounded-full mb-8">
+                <svg class="w-20 h-20 text-slate-800" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <rect x="5" y="11" width="14" height="10" rx="2" fill="currentColor" fill-opacity="0.1" />
+                    <path id="lockShackle" class="lock-shackle" d="M7 11V7a5 5 0 0110 0v4" stroke-linecap="round" />
+                </svg>
+            </div>
+
+            <button id="lockBtn" onclick="toggleLock()" class="w-full py-4 bg-slate-900 text-white rounded-2xl font-black text-xs uppercase tracking-widest hover:bg-slate-800 transition active:scale-95 shadow-lg shadow-slate-200">
+                Unlock Vault
+            </button>
+            <h3 class="mt-6 text-sm font-black text-slate-800 uppercase tracking-tight">Storage Access</h3>
+        </div>
+
+        <!-- CLIMATE CONTROL (Mental Models & Mapping) -->
+        <div class="bg-white p-10 rounded-[2.5rem] shadow-xl control-card flex flex-col items-center border border-slate-100">
+            <span class="status-badge bg-blue-100 text-blue-600 mb-8" id="climateBadge">Cooling</span>
+            
+            <div id="climateIcon" class="w-20 h-20 mb-8 flex items-center justify-center transition-all duration-300 bg-slate-50 rounded-full">
+                <!-- Snowflake (Signifier) -->
+                <svg id="iconCold" class="w-12 h-12 text-blue-500" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                    <path d="M12 3v18m-9-9h18m-3-6l-6 6m6 6l-6-6M6 6l6 6m-6 6l6-6" stroke-linecap="round" stroke-linejoin="round" />
+                </svg>
+                <!-- Sun/Heat (Signifier) -->
+                <svg id="iconHot" class="w-12 h-12 text-orange-500 hidden" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                    <path d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364-6.364l-.707.707M6.343 17.657l-.707.707m12.02 0l-.707-.707M6.343 6.343l-.707-.707M12 5a7 7 0 100 14 7 7 0 000-14z" />
+                </svg>
+            </div>
+
+            <div class="w-full space-y-4">
+                <div class="flex justify-between items-end">
+                    <span class="text-[10px] font-black text-slate-400 uppercase tracking-widest">Temperature</span>
+                    <span id="tempValue" class="text-3xl font-black text-slate-900 tabular-nums">15<span class="text-lg ml-0.5 text-slate-400">°C</span></span>
+                </div>
                 <input type="range" id="tempSlider" min="15" max="50" value="15" oninput="updateClimate()">
-                <div class="flex justify-between text-[10px] font-bold text-slate-400 mt-2">
-                    <span>15°C</span>
-                    <span id="tempValue" class="text-slate-800 text-lg">15°C</span>
-                    <span>50°C</span>
+                <div class="flex justify-between text-[10px] font-bold text-slate-300 uppercase">
+                    <span>Low</span>
+                    <span>High</span>
                 </div>
             </div>
         </div>
     </div>
 
     <script>
+        /**
+         * HCI Principle: Immediate Feedback
+         * Closes the Gulf of Evaluation by changing icon color and status badge.
+         */
         function updateLight() {
             const isChecked = document.getElementById('lightToggle').checked;
             const bulb = document.getElementById('bulbIcon');
             const filament = document.getElementById('bulbFilament');
-            const statusText = document.getElementById('lightStatus');
+            const badge = document.getElementById('lightBadge');
+            const container = document.getElementById('bulbContainer');
 
             if (isChecked) {
                 bulb.classList.add('text-yellow-400', 'bulb-glow');
-                bulb.style.fill = "rgba(253, 224, 71, 0.2)";
-                filament.classList.remove('hidden');
-                statusText.innerText = "Status: On";
+                bulb.style.fill = "rgba(250, 204, 21, 0.2)";
+                filament.classList.replace('opacity-0', 'opacity-100');
+                container.classList.replace('bg-slate-50', 'bg-yellow-50');
+                badge.innerText = "Active";
+                badge.classList.replace('bg-slate-100', 'bg-yellow-100');
+                badge.classList.replace('text-slate-500', 'text-yellow-700');
             } else {
                 bulb.classList.remove('text-yellow-400', 'bulb-glow');
                 bulb.style.fill = "none";
-                filament.classList.add('hidden');
-                statusText.innerText = "Status: Off";
+                filament.classList.replace('opacity-100', 'opacity-0');
+                container.classList.replace('bg-yellow-50', 'bg-slate-50');
+                badge.innerText = "Inactive";
+                badge.classList.replace('bg-yellow-100', 'bg-slate-100');
+                badge.classList.replace('text-yellow-700', 'text-slate-500');
             }
         }
 
+        /**
+         * HCI Principle: Natural Mapping
+         * Physical movement of shackle mimics real padlock.
+         */
         let isLocked = true;
         function toggleLock() {
             const shackle = document.getElementById('lockShackle');
             const btn = document.getElementById('lockBtn');
-            const statusText = document.getElementById('lockStatus');
+            const badge = document.getElementById('lockBadge');
 
             isLocked = !isLocked;
 
             if (isLocked) {
-                shackle.style.transform = "translateY(0px)";
-                btn.innerText = "Unlock Room";
-                btn.classList.replace('bg-green-600', 'bg-slate-800');
-                statusText.innerText = "Status: Locked";
+                shackle.style.transform = "rotate(0deg) translateY(0px)";
+                btn.innerText = "Unlock Vault";
+                btn.classList.replace('bg-emerald-600', 'bg-slate-900');
+                badge.innerText = "Secured";
+                badge.classList.replace('bg-emerald-100', 'bg-rose-100');
+                badge.classList.replace('text-emerald-600', 'text-rose-600');
             } else {
-                shackle.style.transform = "translateY(-5px) rotate(-10deg)";
-                btn.innerText = "Lock Room";
-                btn.classList.replace('bg-slate-800', 'bg-green-600');
-                statusText.innerText = "Status: Unlocked";
+                shackle.style.transform = "rotate(-35deg) translateY(-8px)";
+                btn.innerText = "Secure Vault";
+                btn.classList.replace('bg-slate-900', 'bg-emerald-600');
+                badge.innerText = "Open";
+                badge.classList.replace('bg-rose-100', 'bg-emerald-100');
+                badge.classList.replace('text-rose-600', 'text-emerald-600');
             }
         }
 
+        /**
+         * HCI Principle: Avoiding Slips & Preserving Mental Model
+         * Fixed: Removed the reset-logic at 50°C. 
+         * Sliders should be continuous and predictable.
+         */
         function updateClimate() {
             const temp = parseInt(document.getElementById('tempSlider').value);
             const display = document.getElementById('tempValue');
             const iconCold = document.getElementById('iconCold');
             const iconHot = document.getElementById('iconHot');
-            const slider = document.getElementById('tempSlider');
+            const badge = document.getElementById('climateBadge');
 
-            if (temp >= 50) {
-                slider.value = 15;
-                updateClimate();
-                return;
-            }
+            display.innerHTML = `${temp}<span class="text-lg ml-0.5 text-slate-400">°C</span>`;
 
-            display.innerText = temp + "°C";
-
-            if (temp >= 26) {
+            // Threshold for semantic state change (Mental Model of Hot vs Cold)
+            if (temp >= 28) {
                 iconCold.classList.add('hidden');
                 iconHot.classList.remove('hidden');
+                badge.innerText = "Heating";
+                badge.classList.replace('bg-blue-100', 'bg-orange-100');
+                badge.classList.replace('text-blue-600', 'text-orange-600');
             } else {
                 iconHot.classList.add('hidden');
                 iconCold.classList.remove('hidden');
+                badge.innerText = "Cooling";
+                badge.classList.replace('bg-orange-100', 'bg-blue-100');
+                badge.classList.replace('text-orange-600', 'text-blue-600');
             }
         }
     </script>
