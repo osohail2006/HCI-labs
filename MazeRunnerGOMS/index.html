@@ -11,28 +11,10 @@
     <script src="https://unpkg.com/lucide@latest"></script>
     
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&family=JetBrains+Mono:wght@500&display=swap');
-        
-        body {
-            font-family: 'Inter', sans-serif;
-            background-color: #0f172a;
-            color: #f8fafc;
-            overflow-x: hidden;
-        }
-
-        .glass {
-            background: rgba(255, 255, 255, 0.03);
-            backdrop-filter: blur(12px);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-        }
-
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&family=JetBrains+Mono&display=swap');
+        body { font-family: 'Inter', sans-serif; background-color: #0f172a; color: #f8fafc; }
         .font-mono { font-family: 'JetBrains Mono', monospace; }
-
-        @keyframes pulse-slow {
-            0%, 100% { opacity: 0.3; }
-            50% { opacity: 0.6; }
-        }
-        .animate-pulse-slow { animation: pulse-slow 3s infinite; }
+        .glass { background: rgba(255, 255, 255, 0.03); backdrop-filter: blur(10px); border: 1px solid rgba(255, 255, 255, 0.1); }
     </style>
 </head>
 <body>
@@ -41,13 +23,11 @@
     <script type="text/babel">
         const { useState, useEffect, useRef } = React;
 
-        // Simple Icon wrapper for Lucide CDN usage
-        const Icon = ({ name, className = "w-5 h-5" }) => {
+        // Helper to render Lucide Icons in a CDN environment
+        const LucideIcon = ({ name, className = "w-6 h-6" }) => {
             const iconRef = useRef(null);
             useEffect(() => {
-                if (window.lucide) {
-                    window.lucide.createIcons();
-                }
+                if (window.lucide) window.lucide.createIcons();
             });
             return <i data-lucide={name} className={className}></i>;
         };
@@ -61,7 +41,7 @@
             const [kbStep, setKbStep] = useState(0);
             const [prediction, setPrediction] = useState('--');
             const [brainLoad, setBrainLoad] = useState(20);
-
+            
             const timerRef = useRef(null);
             const startTimeRef = useRef(null);
 
@@ -89,7 +69,6 @@
                 setIsActive(true);
                 setMouseStep(0);
                 setKbStep(0);
-                setBrainLoad(30);
             };
 
             const handleComplete = () => {
@@ -97,14 +76,10 @@
                 setScreen('results');
             };
 
-            // Keyboard logic
             useEffect(() => {
                 const handleKeyDown = (e) => {
                     if (screen !== 'keyboard') return;
-                    if (e.altKey && kbStep === 0) {
-                        setKbStep(1);
-                        setBrainLoad(prev => Math.max(10, prev - 20));
-                    }
+                    if (e.altKey && kbStep === 0) setKbStep(1);
                     if (e.key === '7' && kbStep === 1) {
                         setKbStep(2);
                         setTimeout(handleComplete, 300);
@@ -114,131 +89,83 @@
                 return () => window.removeEventListener('keydown', handleKeyDown);
             }, [screen, kbStep]);
 
-            const ProgressBar = ({ value, colorClass }) => (
-                <div className="w-full bg-white/10 h-2 rounded-full overflow-hidden mt-2">
-                    <div 
-                        className={`h-full transition-all duration-300 ${colorClass}`} 
-                        style={{ width: `${value}%` }}
-                    />
-                </div>
-            );
-
             return (
-                <div className="min-h-screen p-4 md:p-8 flex flex-col items-center">
-                    {/* Header */}
-                    <header className="glass w-full max-w-4xl p-6 rounded-[2.5rem] flex flex-wrap items-center justify-between gap-6 mb-8 shadow-2xl">
-                        <div className="flex items-center gap-4">
-                            <div className="bg-blue-600 p-3 rounded-2xl">
-                                <Icon name="brain" className="text-white w-6 h-6" />
-                            </div>
+                <div className="min-h-screen flex flex-col items-center justify-center p-6">
+                    <div className="w-full max-w-2xl space-y-6">
+                        {/* Header */}
+                        <div className="glass p-6 rounded-[2rem] flex justify-between items-center shadow-2xl">
                             <div>
-                                <h1 className="text-xl font-extrabold uppercase tracking-tight">Cognitive Maze Runner</h1>
-                                <p className="text-[10px] text-blue-400 font-bold tracking-widest uppercase">UBIT DCS • LAB 06</p>
+                                <h1 className="text-lg font-extrabold uppercase tracking-tighter text-blue-400">Cognitive Maze Runner</h1>
+                                <p className="text-[10px] text-slate-500 font-bold uppercase">UBIT Lab 06 • GOMS Analysis</p>
+                            </div>
+                            <div className="text-right">
+                                <p className="text-[10px] uppercase font-bold text-slate-500">Live τm</p>
+                                <p className="text-2xl font-mono font-bold text-white">{time.toFixed(2)}s</p>
                             </div>
                         </div>
 
-                        <div className="flex gap-4">
-                            <div className="bg-white/5 p-3 rounded-2xl border border-white/10 min-w-[120px]">
-                                <p className="text-[10px] uppercase text-slate-500 font-bold">Time (τm)</p>
-                                <p className="text-xl font-mono font-bold text-blue-400">{time.toFixed(2)}s</p>
-                            </div>
-                            <div className="hidden md:block bg-white/5 p-3 rounded-2xl border border-white/10 min-w-[140px]">
-                                <p className="text-[10px] uppercase text-slate-500 font-bold">Brain Load</p>
-                                <ProgressBar value={brainLoad} colorClass={brainLoad > 80 ? 'bg-rose-500' : 'bg-blue-500'} />
-                            </div>
-                        </div>
-                    </header>
-
-                    <main className="w-full max-w-4xl">
-                        {/* START SCREEN */}
-                        {screen === 'start' && (
-                            <div className="glass p-10 rounded-[3rem] text-center space-y-8 animate-in fade-in duration-500">
-                                <div>
-                                    <h2 className="text-3xl font-black mb-2">GOMS Selection Test</h2>
-                                    <p className="text-slate-400">Objective: Find and Execute Terminal Command 7.</p>
-                                </div>
-                                <div className="grid md:grid-cols-2 gap-6">
-                                    <button onClick={() => handleStart('MOUSE')} className="glass group p-8 rounded-[2rem] hover:bg-blue-600/10 transition-all text-left">
-                                        <Icon name="mouse-pointer-2" className="text-blue-500 mb-4" />
-                                        <h3 className="text-xl font-bold">Method A: Mouse</h3>
-                                        <p className="text-sm text-slate-500">Manual directory navigation.</p>
-                                    </button>
-                                    <button onClick={() => handleStart('KEYBOARD')} className="glass group p-8 rounded-[2rem] hover:bg-emerald-600/10 transition-all text-left">
-                                        <Icon name="keyboard" className="text-emerald-500 mb-4" />
-                                        <h3 className="text-xl font-bold">Method B: Keys</h3>
-                                        <p className="text-sm text-slate-500">Expert sequence ALT+7.</p>
-                                    </button>
-                                </div>
-                            </div>
-                        )}
-
-                        {/* MOUSE MAZE */}
-                        {screen === 'mouse' && (
-                            <div className="glass p-8 rounded-[3rem] space-y-4">
-                                <p className="text-xs font-mono text-slate-500 uppercase">Path: root / sys / L7</p>
-                                {mouseStep === 0 && (
-                                    <button onClick={() => setMouseStep(1)} className="w-full text-left p-6 rounded-2xl bg-white/5 border border-white/10 hover:border-blue-500 flex justify-between items-center transition-all">
-                                        <span>Root_Directory</span> <Icon name="chevron-right" />
-                                    </button>
-                                )}
-                                {mouseStep === 1 && (
-                                    <button onClick={() => setMouseStep(2)} className="w-full text-left p-6 rounded-2xl bg-white/5 border border-white/10 hover:border-blue-500 flex justify-between items-center transition-all">
-                                        <span>Terminal_Commands</span> <Icon name="chevron-right" />
-                                    </button>
-                                )}
-                                {mouseStep === 2 && (
-                                    <button onClick={handleComplete} className="w-full p-6 rounded-2xl bg-emerald-500/20 border border-emerald-500 text-emerald-400 font-bold flex justify-between items-center animate-pulse">
-                                        <span>EXECUTE_L7</span> <Icon name="zap" />
-                                    </button>
-                                )}
-                            </div>
-                        )}
-
-                        {/* KEYBOARD MAZE */}
-                        {screen === 'keyboard' && (
-                            <div className="glass p-12 rounded-[3rem] text-center space-y-8">
-                                <h2 className="text-xl font-bold text-slate-500">Expert Sequence Protocol</h2>
-                                <div className="flex justify-center items-center gap-4">
-                                    <div className={`w-20 h-20 rounded-2xl flex items-center justify-center text-xl font-black border-2 transition-all ${kbStep >= 1 ? 'bg-blue-600 border-blue-400' : 'bg-white/5 border-white/10 text-slate-600'}`}>ALT</div>
-                                    <span className="text-2xl font-bold">+</span>
-                                    <div className={`w-20 h-20 rounded-2xl flex items-center justify-center text-xl font-black border-2 transition-all ${kbStep === 2 ? 'bg-emerald-600 border-emerald-400' : 'bg-white/5 border-white/10 text-slate-600'}`}>7</div>
-                                </div>
-                                <p className="text-sm text-slate-500 animate-pulse-slow font-mono">Hold ALT + Press '7'</p>
-                            </div>
-                        )}
-
-                        {/* RESULTS */}
-                        {screen === 'results' && (
-                            <div className="glass p-10 rounded-[3rem] space-y-8 animate-in slide-in-from-bottom-5">
-                                <div className="text-center">
-                                    <Icon name="check-circle-2" className="w-12 h-12 text-emerald-500 mx-auto mb-4" />
-                                    <h2 className="text-3xl font-black">Cognitive Audit</h2>
-                                </div>
-                                <div className="grid grid-cols-2 gap-4">
-                                    <div className="bg-white/5 p-6 rounded-3xl">
-                                        <p className="text-xs uppercase font-bold text-slate-500 mb-1">Actual Time</p>
-                                        <p className="text-4xl font-mono font-bold">{time.toFixed(2)}s</p>
-                                    </div>
-                                    <div className="bg-white/5 p-6 rounded-3xl">
-                                        <p className="text-xs uppercase font-bold text-slate-500 mb-1">KLM Prediction</p>
-                                        <p className="text-4xl font-mono font-bold text-slate-500">{KLM_PREDICTIONS[method]}s</p>
+                        {/* Main Interaction Area */}
+                        <main className="glass p-8 rounded-[3rem] min-h-[400px] flex flex-col justify-center text-center">
+                            {screen === 'start' && (
+                                <div className="space-y-8 animate-in fade-in duration-500">
+                                    <h2 className="text-2xl font-bold italic">Select Execution Method</h2>
+                                    <div className="grid grid-cols-2 gap-4">
+                                        <button onClick={() => handleStart('MOUSE')} className="glass p-8 rounded-3xl hover:bg-blue-600/20 transition-all flex flex-col items-center gap-3">
+                                            <LucideIcon name="mouse-pointer-2" className="text-blue-400" />
+                                            <span className="font-bold">Mouse (P)</span>
+                                        </button>
+                                        <button onClick={() => handleStart('KEYBOARD')} className="glass p-8 rounded-3xl hover:bg-emerald-600/20 transition-all flex flex-col items-center gap-3">
+                                            <LucideIcon name="keyboard" className="text-emerald-400" />
+                                            <span className="font-bold">Keyboard (K)</span>
+                                        </button>
                                     </div>
                                 </div>
-                                <div className="p-6 bg-blue-600/10 rounded-3xl border border-blue-600/20 text-sm italic text-slate-400">
-                                    {time > KLM_PREDICTIONS[method] 
-                                        ? "Novice Delay Detected: Higher mental preparation (M-cycles) required." 
-                                        : "Expert Efficiency: Automated motor actions minimizing the cognitive bottleneck."}
-                                </div>
-                                <button onClick={() => location.reload()} className="w-full bg-white text-slate-900 py-6 rounded-[2rem] font-black uppercase tracking-widest hover:bg-blue-400 hover:text-white transition-all shadow-xl shadow-blue-500/10 flex items-center justify-center gap-3">
-                                    <Icon name="rotate-ccw" /> Re-Run Experiment
-                                </button>
-                            </div>
-                        )}
-                    </main>
+                            )}
 
-                    <footer className="mt-12 text-[10px] text-slate-600 font-bold uppercase tracking-[0.3em] text-center">
-                        Card, Moran, & Newell (1983) • GOMS • Norman's 7 Stages of Action
-                    </footer>
+                            {screen === 'mouse' && (
+                                <div className="space-y-4">
+                                    <p className="text-xs font-mono text-slate-500 uppercase mb-4">Click sequence to execute L7</p>
+                                    {mouseStep === 0 && <button onClick={() => setMouseStep(1)} className="w-full glass p-6 rounded-2xl hover:border-blue-500 transition-all flex justify-between items-center"><span>1. Open Root</span> <LucideIcon name="chevron-right" /></button>}
+                                    {mouseStep === 1 && <button onClick={() => setMouseStep(2)} className="w-full glass p-6 rounded-2xl hover:border-blue-500 transition-all flex justify-between items-center"><span>2. Select Terminal</span> <LucideIcon name="chevron-right" /></button>}
+                                    {mouseStep === 2 && <button onClick={handleComplete} className="w-full bg-emerald-600/20 border border-emerald-500 p-6 rounded-2xl text-emerald-400 font-bold flex justify-between items-center animate-pulse"><span>3. EXECUTE_L7</span> <LucideIcon name="zap" /></button>}
+                                </div>
+                            )}
+
+                            {screen === 'keyboard' && (
+                                <div className="space-y-8">
+                                    <h2 className="text-slate-500 font-bold uppercase tracking-widest text-sm">Expert Protocol</h2>
+                                    <div className="flex justify-center gap-4 text-3xl font-black">
+                                        <div className={`w-20 h-20 flex items-center justify-center rounded-2xl border-2 transition-all ${kbStep >= 1 ? 'bg-blue-600 border-blue-400' : 'border-white/10 text-slate-700'}`}>ALT</div>
+                                        <div className="flex items-center">+</div>
+                                        <div className={`w-20 h-20 flex items-center justify-center rounded-2xl border-2 transition-all ${kbStep === 2 ? 'bg-emerald-600 border-emerald-400' : 'border-white/10 text-slate-700'}`}>7</div>
+                                    </div>
+                                    <p className="text-xs text-slate-500 animate-pulse font-mono">Hold ALT and press '7'</p>
+                                </div>
+                            )}
+
+                            {screen === 'results' && (
+                                <div className="space-y-6 animate-in slide-in-from-bottom-5 duration-700">
+                                    <div className="flex justify-center"><LucideIcon name="check-circle-2" className="text-emerald-400 w-12 h-12" /></div>
+                                    <h2 className="text-3xl font-black">Performance Audit</h2>
+                                    <div className="grid grid-cols-2 gap-4">
+                                        <div className="bg-white/5 p-4 rounded-2xl">
+                                            <p className="text-[10px] uppercase font-bold text-slate-500">Actual Time</p>
+                                            <p className="text-3xl font-mono font-bold text-white">{time.toFixed(2)}s</p>
+                                        </div>
+                                        <div className="bg-white/5 p-4 rounded-2xl">
+                                            <p className="text-[10px] uppercase font-bold text-slate-500">KLM Goal</p>
+                                            <p className="text-3xl font-mono font-bold text-slate-500">{KLM_PREDICTIONS[method]}s</p>
+                                        </div>
+                                    </div>
+                                    <button onClick={() => location.reload()} className="w-full bg-white text-slate-900 py-5 rounded-2xl font-black uppercase tracking-widest hover:bg-blue-400 hover:text-white transition-all">Restart Experiment</button>
+                                </div>
+                            )}
+                        </main>
+
+                        <footer className="text-center text-[9px] text-slate-600 font-bold tracking-[0.4em] uppercase">
+                            Model Human Processor • Card, Moran, & Newell (1983)
+                        </footer>
+                    </div>
                 </div>
             );
         };
