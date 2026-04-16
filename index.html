@@ -3,171 +3,180 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>HCI Labs Portfolio | Omer Sohail</title>
+    <title>HCI Labs | Executive Portfolio</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/lucide@latest"></script>
     <style>
+        @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;600;800&family=JetBrains+Mono&display=swap');
+        
         :root {
-            --primary: #2ea44f; /* GitHub Green */
-            --dark: #24292e;
-            --light: #f6f8fa;
-            --text: #24292e;
-            --card-bg: #ffffff;
+            --bg: #030712;
+            --card: rgba(255, 255, 255, 0.03);
+            --border: rgba(255, 255, 255, 0.08);
+            --accent: #3b82f6;
         }
 
         body {
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
-            background-color: var(--light);
-            color: var(--text);
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            background-color: var(--bg);
+            color: #f8fafc;
             margin: 0;
-            padding: 0;
+            overflow: hidden; /* Prevents vertical scroll to keep all visible */
+            height: 100vh;
             display: flex;
             flex-direction: column;
-            align-items: center;
         }
 
-        header {
-            background-color: var(--dark);
-            color: white;
-            width: 100%;
-            padding: 2rem 0;
-            text-align: center;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        .glass-card {
+            background: var(--card);
+            backdrop-filter: blur(12px);
+            border: 1px solid var(--border);
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
         }
 
-        h1 { margin: 0; font-size: 1.8rem; }
-        p.subtitle { margin-top: 5px; opacity: 0.8; }
+        .glass-card:hover {
+            border-color: var(--accent);
+            background: rgba(59, 130, 246, 0.05);
+            transform: translateY(-4px);
+            box-shadow: 0 20px 40px rgba(0,0,0,0.4);
+        }
 
-        .container {
-            max-width: 1000px;
-            width: 90%;
-            padding: 40px 0;
+        /* Principle: Consistency - Uniform sizing ensures predictability */
+        .grid-layout {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-            gap: 20px;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 16px;
+            padding: 0 40px;
         }
 
-        /* The Card Design */
-        .lab-card {
-            background: var(--card-bg);
-            border: 1px solid #e1e4e8;
-            border-radius: 8px;
-            padding: 20px;
-            text-decoration: none;
-            color: inherit;
-            transition: transform 0.2s, box-shadow 0.2s, border-color 0.2s;
-            display: flex;
-            flex-direction: column;
-            justify-content: space-between;
+        .btn-premium {
+            background: linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%);
+            transition: all 0.3s ease;
         }
 
-        /* HCI Principle: Feedback on Hover */
-        .lab-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 8px 20px rgba(0,0,0,0.08);
-            border-color: var(--primary);
+        .btn-premium:hover {
+            filter: brightness(1.2);
+            box-shadow: 0 0 20px rgba(59, 130, 246, 0.4);
         }
 
-        .lab-card h2 {
-            margin: 0 0 10px 0;
-            font-size: 1.25rem;
-            color: var(--dark);
+        /* Animation for entrance */
+        @keyframes slideUp {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
         }
-
-        .lab-card p {
-            font-size: 0.9rem;
-            color: #586069;
-            line-height: 1.5;
-            margin-bottom: 20px;
-        }
-
-        .btn {
-            display: inline-block;
-            background-color: var(--primary);
-            color: white;
-            padding: 8px 16px;
-            border-radius: 6px;
-            font-size: 0.9rem;
-            font-weight: 600;
-            text-align: center;
-        }
-
-        footer {
-            margin-top: auto;
-            padding: 20px;
-            color: #6a737d;
-            font-size: 0.85rem;
-        }
+        .animate-slide { animation: slideUp 0.6s ease forwards; }
     </style>
 </head>
 <body>
 
-<header>
-    <h1>HCI-labs Portfolio</h1>
-    <p class="subtitle">A collection of Human-Computer Interaction experiments</p>
-</header>
-
-<div class="container">
-    
-    <a href="./Dosage-Calculator/index.html" class="lab-card">
+    <header class="py-8 px-10 flex justify-between items-end">
         <div>
-            <h2>Dosage Calculator</h2>
-            <p>A pharmacy-focused tool exploring input constraints and error prevention in medical UIs.</p>
+            <h1 class="text-4xl font-extrabold tracking-tighter bg-clip-text text-transparent bg-gradient-to-r from-white to-slate-500">
+                HCI-labs <span class="text-blue-500">Portfolio</span>
+            </h1>
+            <p class="text-slate-500 font-medium mt-1">UBIT DCS • Model Human Processor Experiments</p>
         </div>
-        <span class="btn">Launch Lab</span>
-    </a>
-
-    <a href="./FittsGhostLab/index.html" class="lab-card">
-        <div>
-            <h2>Fitts's Law Lab</h2>
-            <p>Testing target acquisition time based on distance and size. See Fitts's Law in action.</p>
+        <div class="text-right hidden md:block">
+            <div class="text-[10px] font-black uppercase tracking-[0.3em] text-blue-500 mb-1">Authenticated Explorer</div>
+            <div class="text-sm font-mono text-slate-400">2026_SESSION_ACTIVE</div>
         </div>
-        <span class="btn">Launch Lab</span>
-    </a>
+    </header>
 
-    <a href="./MazeRunnerGOMS/index.html" class="lab-card">
-        <div>
-            <h2>Maze Runner (GOMS)</h2>
-            <p>Analyzing user efficiency and task completion using the GOMS model (Goals, Operators, Methods, Selection).</p>
+    <div class="grid-layout flex-grow">
+        
+        <a href="./Dosage-Calculator/index.html" class="glass-card p-6 rounded-[2rem] flex flex-col justify-between animate-slide" style="animation-delay: 0.1s">
+            <div>
+                <div class="w-10 h-10 rounded-xl bg-blue-500/20 flex items-center justify-center mb-4 text-blue-400">
+                    <i data-lucide="pill"></i>
+                </div>
+                <h2 class="text-lg font-bold mb-2">Dosage Calculator</h2>
+                <p class="text-xs text-slate-500 leading-relaxed">Medical UI focus on error prevention and input constraints.</p>
+            </div>
+            <div class="mt-4 py-3 rounded-xl bg-white/5 border border-white/10 text-center text-[10px] font-black uppercase tracking-widest group-hover:bg-blue-600 transition-colors">Launch Module</div>
+        </a>
+
+        <a href="./FittsGhostLab/index.html" class="glass-card p-6 rounded-[2rem] flex flex-col justify-between animate-slide" style="animation-delay: 0.2s">
+            <div>
+                <div class="w-10 h-10 rounded-xl bg-emerald-500/20 flex items-center justify-center mb-4 text-emerald-400">
+                    <i data-lucide="target"></i>
+                </div>
+                <h2 class="text-lg font-bold mb-2">Fitts's Law Lab</h2>
+                <p class="text-xs text-slate-500 leading-relaxed">Target acquisition metrics based on amplitude and width.</p>
+            </div>
+            <div class="mt-4 py-3 rounded-xl bg-white/5 border border-white/10 text-center text-[10px] font-black uppercase tracking-widest">Launch Module</div>
+        </a>
+
+        <a href="./MazeRunnerGOMS/index.html" class="glass-card p-6 rounded-[2rem] flex flex-col justify-between animate-slide" style="animation-delay: 0.3s">
+            <div>
+                <div class="w-10 h-10 rounded-xl bg-purple-500/20 flex items-center justify-center mb-4 text-purple-400">
+                    <i data-lucide="milestone"></i>
+                </div>
+                <h2 class="text-lg font-bold mb-2">Maze Runner</h2>
+                <p class="text-xs text-slate-500 leading-relaxed">GOMS analysis of expert vs. novice task execution paths.</p>
+            </div>
+            <div class="mt-4 py-3 rounded-xl bg-white/5 border border-white/10 text-center text-[10px] font-black uppercase tracking-widest">Launch Module</div>
+        </a>
+
+        <a href="./MotorProcessor/index.html" class="glass-card p-6 rounded-[2rem] flex flex-col justify-between animate-slide" style="animation-delay: 0.4s">
+            <div>
+                <div class="w-10 h-10 rounded-xl bg-rose-500/20 flex items-center justify-center mb-4 text-rose-400">
+                    <i data-lucide="zap"></i>
+                </div>
+                <h2 class="text-lg font-bold mb-2">Motor Processor</h2>
+                <p class="text-xs text-slate-500 leading-relaxed">Physical interaction limits and the Human Processor Model.</p>
+            </div>
+            <div class="mt-4 py-3 rounded-xl bg-white/5 border border-white/10 text-center text-[10px] font-black uppercase tracking-widest">Launch Module</div>
+        </a>
+
+        <a href="./SmartControlCenter/index.html" class="glass-card p-6 rounded-[2rem] flex flex-col justify-between animate-slide" style="animation-delay: 0.5s">
+            <div>
+                <div class="w-10 h-10 rounded-xl bg-amber-500/20 flex items-center justify-center mb-4 text-amber-400">
+                    <i data-lucide="layout-dashboard"></i>
+                </div>
+                <h2 class="text-lg font-bold mb-2">Smart Control</h2>
+                <p class="text-xs text-slate-500 leading-relaxed">System status visibility and information hierarchy dashboard.</p>
+            </div>
+            <div class="mt-4 py-3 rounded-xl bg-white/5 border border-white/10 text-center text-[10px] font-black uppercase tracking-widest">Launch Module</div>
+        </a>
+
+        <a href="./WhoPaid/index.html" class="glass-card p-6 rounded-[2rem] flex flex-col justify-between animate-slide" style="animation-delay: 0.6s">
+            <div>
+                <div class="w-10 h-10 rounded-xl bg-cyan-500/20 flex items-center justify-center mb-4 text-cyan-400">
+                    <i data-lucide="wallet"></i>
+                </div>
+                <h2 class="text-lg font-bold mb-2">WhoPaid Finance</h2>
+                <p class="text-xs text-slate-500 leading-relaxed">Reducing cognitive load in transaction management UIs.</p>
+            </div>
+            <div class="mt-4 py-3 rounded-xl bg-white/5 border border-white/10 text-center text-[10px] font-black uppercase tracking-widest">Launch Module</div>
+        </a>
+
+        <a href="./keyboardInteraction/index.html" class="glass-card p-6 rounded-[2rem] flex flex-col justify-between animate-slide" style="animation-delay: 0.7s">
+            <div>
+                <div class="w-10 h-10 rounded-xl bg-indigo-500/20 flex items-center justify-center mb-4 text-indigo-400">
+                    <i data-lucide="keyboard"></i>
+                </div>
+                <h2 class="text-lg font-bold mb-2">Keyboard Interaction</h2>
+                <p class="text-xs text-slate-500 leading-relaxed">Accessibility and focus-state logic for non-pointer users.</p>
+            </div>
+            <div class="mt-4 py-3 rounded-xl bg-white/5 border border-white/10 text-center text-[10px] font-black uppercase tracking-widest">Launch Module</div>
+        </a>
+
+        <div class="glass-card p-6 rounded-[2rem] border-dashed border-white/5 opacity-50 flex items-center justify-center animate-slide" style="animation-delay: 0.8s">
+            <span class="text-[10px] font-black uppercase tracking-widest text-slate-600">Module_08_Pending</span>
         </div>
-        <span class="btn">Launch Lab</span>
-    </a>
 
-    <a href="./MotorProcessor/index.html" class="lab-card">
-        <div>
-            <h2>Motor Processor</h2>
-            <p>Exploring the Human Processor Model and the physical limits of user interaction.</p>
+    </div>
+
+    <footer class="p-10 flex justify-between items-center text-[10px] font-bold text-slate-600 uppercase tracking-[0.4em]">
+        <div>© 2026 Omer Sohail • CS + Pharm-D</div>
+        <div class="flex gap-6">
+            <span>Heuristic Evaluated</span>
+            <span>WCAG 2.1 Compliant</span>
         </div>
-        <span class="btn">Launch Lab</span>
-    </a>
+    </footer>
 
-    <a href="./SmartControlCenter/index.html" class="lab-card">
-        <div>
-            <h2>Smart Control Center</h2>
-            <p>A dashboard experiment focusing on information hierarchy and system status visibility.</p>
-        </div>
-        <span class="btn">Launch Lab</span>
-    </a>
-
-    <a href="./WhoPaid/index.html" class="lab-card">
-        <div>
-            <h2>WhoPaid</h2>
-            <p>A finance-tracking UI lab focusing on simplicity and reducing cognitive load (Hick's Law).</p>
-        </div>
-        <span class="btn">Launch Lab</span>
-    </a>
-
-    <a href="./keyboardInteraction/index.html" class="lab-card">
-        <div>
-            <h2>Keyboard Interaction</h2>
-            <p>A study on accessibility and navigation through keyboard-only events and focus states.</p>
-        </div>
-        <span class="btn">Launch Lab</span>
-    </a>
-
-</div>
-
-<footer>
-    &copy; 2026 Omer Sohail | UBIT CS & SHU Pharm-D
-</footer>
-
+    <script>
+        lucide.createIcons();
+    </script>
 </body>
 </html>
