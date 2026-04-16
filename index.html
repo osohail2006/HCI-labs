@@ -3,175 +3,286 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>HCI Labs | Executive Portfolio</title>
+    <title>HCI Portfolio | Omer Sohail</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://unpkg.com/lucide@latest"></script>
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;600;800&family=JetBrains+Mono&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Sora:wght@300;400;600;800&family=JetBrains+Mono:wght@500;700&display=swap');
         
         :root {
-            --bg: #030712;
-            --card: rgba(255, 255, 255, 0.03);
-            --border: rgba(255, 255, 255, 0.08);
-            --accent: #3b82f6;
+            --bg: #fafafa;
+            --text: #0f172a;
         }
 
         body {
-            font-family: 'Plus Jakarta Sans', sans-serif;
+            font-family: 'Sora', sans-serif;
             background-color: var(--bg);
-            color: #f8fafc;
-            margin: 0;
-            overflow: hidden; /* Prevents vertical scroll to keep all visible */
+            color: var(--text);
+            overflow: hidden;
             height: 100vh;
+            margin: 0;
             display: flex;
             flex-direction: column;
         }
 
-        .glass-card {
-            background: var(--card);
-            backdrop-filter: blur(12px);
-            border: 1px solid var(--border);
-            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        .mono-font { font-family: 'JetBrains Mono', monospace; }
+
+        /* Smooth Staggered Entrance */
+        @keyframes revealUp {
+            from { opacity: 0; transform: translateY(40px) scale(0.95); }
+            to { opacity: 1; transform: translateY(0) scale(1); }
         }
 
-        .glass-card:hover {
-            border-color: var(--accent);
-            background: rgba(59, 130, 246, 0.05);
-            transform: translateY(-4px);
-            box-shadow: 0 20px 40px rgba(0,0,0,0.4);
-        }
+        .stagger-1 { animation: revealUp 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards; animation-delay: 0.1s; opacity: 0; }
+        .stagger-2 { animation: revealUp 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards; animation-delay: 0.2s; opacity: 0; }
+        .stagger-3 { animation: revealUp 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards; animation-delay: 0.3s; opacity: 0; }
+        .stagger-4 { animation: revealUp 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards; animation-delay: 0.4s; opacity: 0; }
+        .stagger-5 { animation: revealUp 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards; animation-delay: 0.5s; opacity: 0; }
+        .stagger-6 { animation: revealUp 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards; animation-delay: 0.6s; opacity: 0; }
+        .stagger-7 { animation: revealUp 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards; animation-delay: 0.7s; opacity: 0; }
 
-        /* Principle: Consistency - Uniform sizing ensures predictability */
-        .grid-layout {
+        .workspace {
             display: grid;
             grid-template-columns: repeat(4, 1fr);
-            gap: 16px;
-            padding: 0 40px;
+            grid-template-rows: 1.2fr 1fr;
+            gap: 1.25rem;
+            padding: 1.5rem;
+            flex-grow: 1;
         }
 
-        .btn-premium {
-            background: linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%);
-            transition: all 0.3s ease;
+        .lab-module {
+            background: #ffffff;
+            border: 1px solid #f1f5f9;
+            border-radius: 2.25rem;
+            padding: 2rem;
+            transition: all 0.5s cubic-bezier(0.23, 1, 0.32, 1);
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            overflow: hidden;
+            text-decoration: none;
+            color: inherit;
         }
 
-        .btn-premium:hover {
-            filter: brightness(1.2);
-            box-shadow: 0 0 20px rgba(59, 130, 246, 0.4);
+        /* Unique Spatial Depth */
+        .lab-module:hover {
+            transform: translateY(-10px) scale(1.02);
+            box-shadow: 0 40px 80px -15px rgba(0, 0, 0, 0.1);
+            border-color: transparent;
         }
 
-        /* Animation for entrance */
-        @keyframes slideUp {
-            from { opacity: 0; transform: translateY(20px); }
-            to { opacity: 1; transform: translateY(0); }
+        .module-id {
+            position: absolute;
+            bottom: -10%;
+            right: -5%;
+            font-size: 10rem;
+            font-weight: 800;
+            opacity: 0.03;
+            pointer-events: none;
+            line-height: 1;
+            transition: all 0.5s ease;
         }
-        .animate-slide { animation: slideUp 0.6s ease forwards; }
+        .lab-module:hover .module-id { transform: scale(1.1) rotate(-5deg); opacity: 0.08; }
+
+        /* Floating Animation */
+        @keyframes floating {
+            0% { transform: translateY(0px); }
+            50% { transform: translateY(-8px); }
+            100% { transform: translateY(0px); }
+        }
+        .float-obj { animation: floating 4s ease-in-out infinite; }
+
+        .active-ring {
+            width: 10px;
+            height: 10px;
+            background-color: #10b981;
+            border-radius: 50%;
+            box-shadow: 0 0 15px rgba(16, 185, 129, 0.5);
+            animation: ringPulse 2.5s infinite;
+        }
+
+        @keyframes ringPulse {
+            0% { transform: scale(1); opacity: 0.4; }
+            50% { transform: scale(1.4); opacity: 1; }
+            100% { transform: scale(1); opacity: 0.4; }
+        }
+
+        .glow-overlay {
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: radial-gradient(circle at top right, var(--glow-color), transparent 70%);
+            opacity: 0;
+            transition: opacity 0.5s ease;
+        }
+        .lab-module:hover .glow-overlay { opacity: 0.15; }
+
+        /* Media Queries to keep everything perfectly visible */
+        @media (max-height: 850px) {
+            .lab-module { padding: 1.5rem; border-radius: 1.75rem; }
+            h2 { font-size: 1.25rem; }
+            p { font-size: 0.75rem; }
+            .workspace { gap: 1rem; padding: 1rem; }
+        }
     </style>
 </head>
-<body>
+<body class="bg-slate-50">
 
-    <header class="py-8 px-10 flex justify-between items-end">
-        <div>
-            <h1 class="text-4xl font-extrabold tracking-tighter bg-clip-text text-transparent bg-gradient-to-r from-white to-slate-500">
-                HCI-labs <span class="text-blue-500">Portfolio</span>
-            </h1>
-            <p class="text-slate-500 font-medium mt-1">UBIT DCS • Model Human Processor Experiments</p>
+    <!-- Top Navigation -->
+    <nav class="w-full px-12 py-6 flex justify-between items-center bg-white/80 backdrop-blur-md border-b border-slate-100 z-50">
+        <div class="flex items-center gap-6">
+            <div class="w-14 h-14 bg-slate-950 rounded-2xl flex items-center justify-center shadow-2xl shadow-slate-200">
+                <i data-lucide="layers-2" class="text-white w-7 h-7"></i>
+            </div>
+            <div>
+                <h1 class="text-2xl font-black uppercase tracking-tighter text-slate-900">HCI <span class="text-indigo-600">HUB</span></h1>
+                <p class="text-[10px] font-bold text-slate-400 uppercase tracking-[0.3em]">Scientific Laboratory Portfolio</p>
+            </div>
         </div>
-        <div class="text-right hidden md:block">
-            <div class="text-[10px] font-black uppercase tracking-[0.3em] text-blue-500 mb-1">Authenticated Explorer</div>
-            <div class="text-sm font-mono text-slate-400">2026_SESSION_ACTIVE</div>
-        </div>
-    </header>
 
-    <div class="grid-layout flex-grow">
+        <div class="flex items-center gap-10">
+            <div class="text-right">
+                <p class="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-1">Student Name</p>
+                <p class="text-xl font-extrabold text-slate-900 leading-none">Omer Sohail</p>
+                <p class="text-xs font-bold text-indigo-500 mt-1 mono-font">Seat No: B2311006135</p>
+            </div>
+            <div class="h-12 w-px bg-slate-100"></div>
+            <div class="flex items-center text-[10px] font-black uppercase text-emerald-600 bg-emerald-50 px-6 py-3 rounded-2xl border border-emerald-100">
+                <span class="active-ring mr-3"></span> Protocol: Online
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Workspace Grid -->
+    <div class="workspace">
         
-        <a href="./Dosage-Calculator/index.html" class="glass-card p-6 rounded-[2rem] flex flex-col justify-between animate-slide" style="animation-delay: 0.1s">
-            <div>
-                <div class="w-10 h-10 rounded-xl bg-blue-500/20 flex items-center justify-center mb-4 text-blue-400">
-                    <i data-lucide="pill"></i>
+        <!-- Module 1: FittsGhostLab (Dominant Module) -->
+        <a href="./FittsGhostLab/index.html" class="lab-module lg:col-span-2 group stagger-1" style="--glow-color: #6366f1">
+            <div class="glow-overlay"></div>
+            <span class="module-id text-indigo-600">01</span>
+            <div class="space-y-6 relative">
+                <div class="w-16 h-16 bg-indigo-50 rounded-3xl flex items-center justify-center text-indigo-600 group-hover:bg-indigo-600 group-hover:text-white transition-all duration-500 float-obj">
+                    <i data-lucide="target" class="w-8 h-8"></i>
                 </div>
-                <h2 class="text-lg font-bold mb-2">Dosage Calculator</h2>
-                <p class="text-xs text-slate-500 leading-relaxed">Medical UI focus on error prevention and input constraints.</p>
+                <div>
+                    <h2 class="text-3xl font-black tracking-tight text-slate-900 mb-2">Fitts's Law</h2>
+                    <p class="text-sm text-slate-500 leading-relaxed max-w-sm font-medium">
+                        Target acquisition metrics. Measuring neural bandwidth through Shannon's Formulation.
+                    </p>
+                </div>
             </div>
-            <div class="mt-4 py-3 rounded-xl bg-white/5 border border-white/10 text-center text-[10px] font-black uppercase tracking-widest group-hover:bg-blue-600 transition-colors">Launch Module</div>
+            <div class="flex items-center gap-3 text-indigo-600 font-black text-xs uppercase tracking-widest mt-4">
+                <span class="px-4 py-2 bg-indigo-50 rounded-xl group-hover:bg-indigo-600 group-hover:text-white transition-colors">Start Module</span>
+                <i data-lucide="arrow-right" class="w-5 h-5 group-hover:translate-x-2 transition-transform"></i>
+            </div>
         </a>
 
-        <a href="./FittsGhostLab/index.html" class="glass-card p-6 rounded-[2rem] flex flex-col justify-between animate-slide" style="animation-delay: 0.2s">
-            <div>
-                <div class="w-10 h-10 rounded-xl bg-emerald-500/20 flex items-center justify-center mb-4 text-emerald-400">
-                    <i data-lucide="target"></i>
+        <!-- Module 2: Dosage-Calculator -->
+        <a href="./Dosage-Calculator/index.html" class="lab-module group stagger-2" style="--glow-color: #10b981">
+            <div class="glow-overlay"></div>
+            <span class="module-id text-emerald-600">02</span>
+            <div class="space-y-4">
+                <div class="w-12 h-12 bg-emerald-50 rounded-2xl flex items-center justify-center text-emerald-600 group-hover:bg-emerald-600 group-hover:text-white transition-all float-obj">
+                    <i data-lucide="pill" class="w-6 h-6"></i>
                 </div>
-                <h2 class="text-lg font-bold mb-2">Fitts's Law Lab</h2>
-                <p class="text-xs text-slate-500 leading-relaxed">Target acquisition metrics based on amplitude and width.</p>
+                <h2 class="text-xl font-bold tracking-tight text-slate-800">Dosage Viz</h2>
+                <p class="text-xs text-slate-400 font-medium leading-relaxed italic">Medical UI safety and error prevention logic.</p>
             </div>
-            <div class="mt-4 py-3 rounded-xl bg-white/5 border border-white/10 text-center text-[10px] font-black uppercase tracking-widest">Launch Module</div>
+            <div class="text-[10px] font-black text-emerald-600 uppercase tracking-widest bg-emerald-50 py-2 rounded-lg text-center">Safety Protocol</div>
         </a>
 
-        <a href="./MazeRunnerGOMS/index.html" class="glass-card p-6 rounded-[2rem] flex flex-col justify-between animate-slide" style="animation-delay: 0.3s">
-            <div>
-                <div class="w-10 h-10 rounded-xl bg-purple-500/20 flex items-center justify-center mb-4 text-purple-400">
-                    <i data-lucide="milestone"></i>
+        <!-- Module 3: MazeRunnerGOMS -->
+        <a href="./MazeRunnerGOMS/index.html" class="lab-module group stagger-3 bg-slate-900 border-none hover:bg-slate-800" style="--glow-color: #f43f5e">
+            <div class="glow-overlay"></div>
+            <span class="module-id text-white opacity-[0.02]">03</span>
+            <div class="space-y-4">
+                <div class="w-12 h-12 bg-white/5 rounded-2xl flex items-center justify-center text-rose-400 group-hover:bg-rose-500 group-hover:text-white transition-all">
+                    <i data-lucide="map" class="w-6 h-6"></i>
                 </div>
-                <h2 class="text-lg font-bold mb-2">Maze Runner</h2>
-                <p class="text-xs text-slate-500 leading-relaxed">GOMS analysis of expert vs. novice task execution paths.</p>
+                <h2 class="text-xl font-bold text-white tracking-tight">Maze Runner</h2>
+                <p class="text-xs text-slate-500 leading-relaxed font-medium">GOMS analysis of expert vs. novice paths.</p>
             </div>
-            <div class="mt-4 py-3 rounded-xl bg-white/5 border border-white/10 text-center text-[10px] font-black uppercase tracking-widest">Launch Module</div>
+            <div class="text-[10px] font-black text-white uppercase tracking-widest border border-white/10 py-2 rounded-lg text-center">Execution Simulation</div>
         </a>
 
-        <a href="./MotorProcessor/index.html" class="glass-card p-6 rounded-[2rem] flex flex-col justify-between animate-slide" style="animation-delay: 0.4s">
-            <div>
-                <div class="w-10 h-10 rounded-xl bg-rose-500/20 flex items-center justify-center mb-4 text-rose-400">
-                    <i data-lucide="zap"></i>
+        <!-- Module 4: MotorProcessor -->
+        <a href="./MotorProcessor/index.html" class="lab-module group stagger-4" style="--glow-color: #f59e0b">
+            <div class="glow-overlay"></div>
+            <span class="module-id text-amber-600">04</span>
+            <div class="space-y-4">
+                <div class="w-12 h-12 bg-amber-50 rounded-2xl flex items-center justify-center text-amber-600 group-hover:bg-amber-600 group-hover:text-white transition-all float-obj">
+                    <i data-lucide="zap" class="w-6 h-6"></i>
                 </div>
-                <h2 class="text-lg font-bold mb-2">Motor Processor</h2>
-                <p class="text-xs text-slate-500 leading-relaxed">Physical interaction limits and the Human Processor Model.</p>
+                <h2 class="text-xl font-bold tracking-tight text-slate-800">Motor Process</h2>
+                <p class="text-xs text-slate-400 font-medium">τm & τc cycle efficiency benchmarking.</p>
             </div>
-            <div class="mt-4 py-3 rounded-xl bg-white/5 border border-white/10 text-center text-[10px] font-black uppercase tracking-widest">Launch Module</div>
+            <div class="flex items-center gap-2 text-amber-600">
+                <i data-lucide="gauge" class="w-4 h-4"></i>
+                <span class="text-[10px] font-black uppercase">Low Latency Mode</span>
+            </div>
         </a>
 
-        <a href="./SmartControlCenter/index.html" class="glass-card p-6 rounded-[2rem] flex flex-col justify-between animate-slide" style="animation-delay: 0.5s">
-            <div>
-                <div class="w-10 h-10 rounded-xl bg-amber-500/20 flex items-center justify-center mb-4 text-amber-400">
-                    <i data-lucide="layout-dashboard"></i>
+        <!-- Module 5: SmartControlCenter -->
+        <a href="./SmartControlCenter/index.html" class="lab-module group stagger-5 lg:col-span-1" style="--glow-color: #06b6d4">
+            <div class="glow-overlay"></div>
+            <span class="module-id text-cyan-600">05</span>
+            <div class="space-y-4">
+                <div class="w-12 h-12 bg-cyan-50 rounded-2xl flex items-center justify-center text-cyan-600 group-hover:bg-cyan-600 group-hover:text-white transition-all">
+                    <i data-lucide="layout-dashboard" class="w-6 h-6"></i>
                 </div>
-                <h2 class="text-lg font-bold mb-2">Smart Control</h2>
-                <p class="text-xs text-slate-500 leading-relaxed">System status visibility and information hierarchy dashboard.</p>
+                <h2 class="text-xl font-bold tracking-tight text-slate-800">Smart Control</h2>
+                <p class="text-xs text-slate-400 font-medium">Hierarchy and status visibility audit.</p>
             </div>
-            <div class="mt-4 py-3 rounded-xl bg-white/5 border border-white/10 text-center text-[10px] font-black uppercase tracking-widest">Launch Module</div>
+            <div class="text-[10px] font-black text-cyan-600 uppercase tracking-widest">Dashboard UX</div>
         </a>
 
-        <a href="./WhoPaid/index.html" class="glass-card p-6 rounded-[2rem] flex flex-col justify-between animate-slide" style="animation-delay: 0.6s">
-            <div>
-                <div class="w-10 h-10 rounded-xl bg-cyan-500/20 flex items-center justify-center mb-4 text-cyan-400">
-                    <i data-lucide="wallet"></i>
+        <!-- Module 6: WhoPaid -->
+        <a href="./WhoPaid/index.html" class="lab-module group stagger-6" style="--glow-color: #8b5cf6">
+            <div class="glow-overlay"></div>
+            <span class="module-id text-violet-600">06</span>
+            <div class="space-y-4">
+                <div class="w-12 h-12 bg-violet-50 rounded-2xl flex items-center justify-center text-violet-600 group-hover:bg-violet-600 group-hover:text-white transition-all float-obj">
+                    <i data-lucide="wallet" class="w-6 h-6"></i>
                 </div>
-                <h2 class="text-lg font-bold mb-2">WhoPaid Finance</h2>
-                <p class="text-xs text-slate-500 leading-relaxed">Reducing cognitive load in transaction management UIs.</p>
+                <h2 class="text-xl font-bold tracking-tight text-slate-800">WhoPaid</h2>
+                <p class="text-xs text-slate-400 font-medium">Reducing load in complex splitting tasks.</p>
             </div>
-            <div class="mt-4 py-3 rounded-xl bg-white/5 border border-white/10 text-center text-[10px] font-black uppercase tracking-widest">Launch Module</div>
+            <div class="flex items-center gap-2 text-violet-600">
+                <i data-lucide="check-square" class="w-4 h-4"></i>
+                <span class="text-[10px] font-black uppercase tracking-wider">Hick's Law Audit</span>
+            </div>
         </a>
 
-        <a href="./keyboardInteraction/index.html" class="glass-card p-6 rounded-[2rem] flex flex-col justify-between animate-slide" style="animation-delay: 0.7s">
-            <div>
-                <div class="w-10 h-10 rounded-xl bg-indigo-500/20 flex items-center justify-center mb-4 text-indigo-400">
-                    <i data-lucide="keyboard"></i>
+        <!-- Module 7: keyboardInteraction -->
+        <a href="./keyboardInteraction/index.html" class="lab-module group stagger-7" style="--glow-color: #ec4899">
+            <div class="glow-overlay"></div>
+            <span class="module-id text-pink-600">07</span>
+            <div class="flex flex-row items-center gap-6">
+                <div class="w-14 h-14 bg-pink-50 rounded-2xl flex items-center justify-center text-pink-600 group-hover:bg-pink-600 group-hover:text-white transition-all float-obj shrink-0">
+                    <i data-lucide="keyboard" class="w-8 h-8"></i>
                 </div>
-                <h2 class="text-lg font-bold mb-2">Keyboard Interaction</h2>
-                <p class="text-xs text-slate-500 leading-relaxed">Accessibility and focus-state logic for non-pointer users.</p>
+                <div>
+                    <h2 class="text-xl font-black tracking-tight text-slate-800 uppercase">Input Hub</h2>
+                    <p class="text-[9px] text-pink-600 font-black uppercase tracking-widest">Interaction suite</p>
+                </div>
             </div>
-            <div class="mt-4 py-3 rounded-xl bg-white/5 border border-white/10 text-center text-[10px] font-black uppercase tracking-widest">Launch Module</div>
+            <div class="flex justify-between items-center mt-6 p-4 bg-slate-50 rounded-2xl border border-slate-100 group-hover:bg-pink-50 transition-colors">
+                <span class="text-[10px] font-bold text-slate-400">τc + τm Metrics</span>
+                <i data-lucide="mouse-pointer-click" class="w-4 h-4 text-pink-500 group-hover:scale-125 transition-transform"></i>
+            </div>
         </a>
-
-        <div class="glass-card p-6 rounded-[2rem] border-dashed border-white/5 opacity-50 flex items-center justify-center animate-slide" style="animation-delay: 0.8s">
-            <span class="text-[10px] font-black uppercase tracking-widest text-slate-600">Module_08_Pending</span>
-        </div>
 
     </div>
 
-    <footer class="p-10 flex justify-between items-center text-[10px] font-bold text-slate-600 uppercase tracking-[0.4em]">
-        <div>© 2026 Omer Sohail • CS + Pharm-D</div>
-        <div class="flex gap-6">
-            <span>Heuristic Evaluated</span>
-            <span>WCAG 2.1 Compliant</span>
+    <!-- Footer Meta-Bar -->
+    <footer class="w-full px-12 py-6 border-t border-slate-100 flex justify-between items-center text-[10px] font-black uppercase tracking-[0.4em] text-slate-400 bg-white">
+        <div class="flex items-center gap-3">
+            <i data-lucide="graduation-cap" class="w-4 h-4 text-slate-300"></i>
+            University of Karachi • DCS
+        </div>
+        <div class="flex gap-12">
+            <span>Human-Centered Computing</span>
+            <span class="text-indigo-600 italic">Spring 2026 Session</span>
         </div>
     </footer>
 
